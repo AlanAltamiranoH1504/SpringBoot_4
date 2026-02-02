@@ -55,4 +55,24 @@ public class GlobalExceptionHandler {
                         ex.getMessage()
                 ));
     }
+
+    @ExceptionHandler(NotFoundVacancys.class)
+    public ResponseEntity<?> handleNotFoundVacancyError(NotFoundVacancys ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(iExcepcionService.generateMessageException(
+                        "Ocurrio un error en el metodo de listado",
+                        "El listado de vacantes disponibles se encuentra vacio",
+                        ex.getMessage()
+                ));
+    }
+
+    @ExceptionHandler(NotFoundVacancy.class)
+    public ResponseEntity<?> handleNotFoundVacancyError(NotFoundVacancy ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(iExcepcionService.generateMessageException(
+                        "Ocurrio un error en la busqueda de la vacante",
+                        "Ocurrio un error en la busqueda de la vacante",
+                        ex.getMessage()
+                ));
+    }
 }

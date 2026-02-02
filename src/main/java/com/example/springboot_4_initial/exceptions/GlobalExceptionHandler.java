@@ -1,7 +1,12 @@
 package com.example.springboot_4_initial.exceptions;
 
+import com.example.springboot_4_initial.exceptions.categories.CreatedCategory;
+import com.example.springboot_4_initial.exceptions.categories.NameCategoryError;
+import com.example.springboot_4_initial.exceptions.categories.NotFoundCategories;
+import com.example.springboot_4_initial.exceptions.categories.NotFoundCategory;
 import com.example.springboot_4_initial.services.interfaces.IExcepcionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -125,6 +130,56 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(iExcepcionService.generateMessageException(
                         "Ocurrio un error general en el servidor",
+                        "",
+                        ex.getMessage()
+                ));
+    }
+
+    @ExceptionHandler(NotFoundCategories.class)
+    public ResponseEntity<?> handleNotFoundCategories(NotFoundCategories ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(iExcepcionService.generateMessageException(
+                        "Ocurrio un error en el listado de categorias",
+                        "",
+                        ex.getMessage()
+                ));
+    }
+
+    @ExceptionHandler(CreatedCategory.class)
+    public ResponseEntity<?> handleCreatedCategory(CreatedCategory ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(iExcepcionService.generateMessageException(
+                        "Ocurrio un error en la creacion de la categoria",
+                        "",
+                        ex.getMessage()
+                ));
+    }
+
+    @ExceptionHandler(NotFoundCategory.class)
+    public ResponseEntity<?> handleNotFoundCategory(NotFoundCategory ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(iExcepcionService.generateMessageException(
+                        "Ocurrio un error en la busqueda de la categoria",
+                        "",
+                        ex.getMessage()
+                ));
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<?> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(iExcepcionService.generateMessageException(
+                        "Ocurrio un error en la creacion de categoria",
+                        "Exite una violacion de la integridad de base de datos en el intento de insercion",
+                        ex.getMessage()
+                ));
+    }
+
+    @ExceptionHandler(NameCategoryError.class)
+    public ResponseEntity<?> handNameCategoryError(NameCategoryError ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(iExcepcionService.generateMessageException(
+                        "Ocurrior un error con el nombre de la categoria",
                         "",
                         ex.getMessage()
                 ));

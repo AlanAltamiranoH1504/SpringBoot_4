@@ -2,7 +2,9 @@ package com.example.springboot_4_initial.controllers;
 
 import com.example.springboot_4_initial.dto.CreateCategoryDTO;
 import com.example.springboot_4_initial.models.Category;
+import com.example.springboot_4_initial.services.interfaces.ICategoryService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -16,41 +18,41 @@ import java.util.Map;
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
+    @Autowired
+    ICategoryService iCategoryService;
+
     @GetMapping("")
     public ResponseEntity<?> list_category() {
-        List<Category> categoryList = new ArrayList<>();
-        Category category1 = new Category(1L, "Desarrollo backend", "Desarrolladores backend", true);
-        Category category2 = new Category(1L, "Desarrollo frontend", "Desarrolladores frontend", true);
-        Category category3 = new Category(1L, "Desarrollo fullstack", "Desarrolladores fullstack", true);
-        categoryList.add(category1);
-        categoryList.add(category2);
-        categoryList.add(category3);
-        return ResponseEntity.status(HttpStatus.OK).body(categoryList);
+        return ResponseEntity.status(HttpStatus.OK).body(iCategoryService.list_categories());
     }
 
     @PostMapping("")
     public ResponseEntity<?> save_category(@Valid @RequestBody CreateCategoryDTO createCategoryDTO, BindingResult bindingResult) {
-        try {
-            if (bindingResult.hasErrors()) {
-                Map<String, Object> errors = new HashMap<>();
-                bindingResult.getFieldErrors().forEach(error -> {
-                    errors.put(error.getField(), error.getDefaultMessage());
-                });
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-            }
-            Category categoryToSave = new Category(1L, createCategoryDTO.getNombre(), createCategoryDTO.getDescription(), true);
-            return ResponseEntity.status(HttpStatus.CREATED).body(categoryToSave);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        Map<String, Object> json = new HashMap<>();
+        if (bindingResult.hasErrors()) {
+            bindingResult.getFieldErrors().forEach(error -> {
+                json.put(error.getField(), error.getDefaultMessage());
+            });
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(json);
         }
+        Category category_to_save = new Category(createCategoryDTO.getName(), createCategoryDTO.getDescription(), true);
+        iCategoryService.save_category(category_to_save);
+        json.put("status", true);
+        json.put("message", "Categoria guardada");
+        return ResponseEntity.status(HttpStatus.CREATED).body(json);
     }
 
     @GetMapping("/search/{id}")
     public ResponseEntity<?> search(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(iCategoryService.get_category(id));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         Map<String, Object> json = new HashMap<>();
+        iCategoryService.delete_category(id);
         json.put("status", true);
-        json.put("id", id);
-        json.put("message", "Ruta con parametro dinamico");
+        json.put("message", "La categoria fue eliminada correctamente");
         return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 

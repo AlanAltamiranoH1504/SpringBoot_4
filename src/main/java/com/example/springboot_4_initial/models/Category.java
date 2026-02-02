@@ -1,17 +1,22 @@
 package com.example.springboot_4_initial.models;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "tbl_categories")
 public class Category {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nombre;
+    private String name;
     private String description;
     private boolean status;
 
     public Category() {
     }
 
-    public Category(Long id, String nombre, String description, boolean status) {
-        this.id = id;
-        this.nombre = nombre;
+    public Category(String name, String description, boolean status) {
+        this.name = name;
         this.description = description;
         this.status = status;
     }
@@ -24,12 +29,12 @@ public class Category {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {

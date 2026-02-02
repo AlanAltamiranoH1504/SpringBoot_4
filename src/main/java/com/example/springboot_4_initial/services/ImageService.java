@@ -16,7 +16,7 @@ import java.util.UUID;
 public class ImageService implements IImageService {
 
     @Override
-    public boolean save_image(String path_img, MultipartFile multipartFile) throws IOException {
+    public String save_image(String path_img, MultipartFile multipartFile) throws IOException {
         // ! Validacion de existencia de archivo
         if (multipartFile.isEmpty()) {
             throw new NotFoundFile("Ocurrio un error en la subida del archivo");
@@ -37,7 +37,7 @@ public class ImageService implements IImageService {
         // * Guardado de archivo con nuevo nombre
         String file_name = UUID.randomUUID().toString() + "_" + multipartFile.getOriginalFilename().replace(" ", "_");
         multipartFile.transferTo(new File(destination_folder + "/" + file_name));
-        return true;
+        return destination_folder + "/" + file_name;
     }
 
     @Override

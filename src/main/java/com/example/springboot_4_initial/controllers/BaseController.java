@@ -5,6 +5,7 @@ import com.example.springboot_4_initial.models.Vacancy;
 import com.example.springboot_4_initial.services.interfaces.IImageService;
 import com.example.springboot_4_initial.services.interfaces.IVacacyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,8 @@ public class BaseController {
     IVacacyService iVacacyService;
     @Autowired
     IImageService iImageService;
+    @Value("${url.imgs}")
+    String url_imgs;
 
     @GetMapping("")
     public ResponseEntity<?> prueba() {
@@ -58,13 +61,13 @@ public class BaseController {
         Map<String, Object> json = new HashMap<>();
         String path_image = "C:/Imagenes_Proyectos/SpringBoot";
 
-        boolean result_save_img = iImageService.save_image(path_image, multipartFile);
-        if (!result_save_img) {
+        String result_save_img = iImageService.save_image(url_imgs, multipartFile);
+        if (result_save_img == null) {
             json.put("status", false);
             json.put("message", "Ocurrio un error en la subida del archivo");
         }
         json.put("status", true);
-        json.put("message", "Guardando img correctamente");
+        json.put("url_img", result_save_img);
 
         return ResponseEntity.status(HttpStatus.OK).body(json);
     }

@@ -39,7 +39,7 @@ public class CategoryService implements ICategoryService {
     @Override
     public Category save_category(Category category) {
         Category name_in_use = iCategoryRepository.name_in_use(category.getName());
-        if (name_in_use != null) {
+        if (name_in_use != null && category.getId() != name_in_use.getId()) {
             throw new NameCategoryError("El nombre de la categoria ya se encuentra en uso");
         }
 

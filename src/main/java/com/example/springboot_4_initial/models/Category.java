@@ -21,6 +21,13 @@ public class Category {
         this.status = status;
     }
 
+    public Category(Long id, String name, String description, boolean status) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.status = status;
+    }
+
     public Long getId() {
         return id;
     }

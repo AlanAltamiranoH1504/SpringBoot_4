@@ -10,6 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -181,6 +182,16 @@ public class GlobalExceptionHandler {
                 .body(iExcepcionService.generateMessageException(
                         "Ocurrior un error con el nombre de la categoria",
                         "",
+                        ex.getMessage()
+                ));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(iExcepcionService.generateMessageException(
+                        "Ocurrio un error el body del request de la peticion",
+                        "El body del request no es valido",
                         ex.getMessage()
                 ));
     }

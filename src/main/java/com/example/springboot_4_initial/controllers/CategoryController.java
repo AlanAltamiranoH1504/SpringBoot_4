@@ -1,6 +1,7 @@
 package com.example.springboot_4_initial.controllers;
 
 import com.example.springboot_4_initial.dto.CreateCategoryDTO;
+import com.example.springboot_4_initial.dto.UpdateCategoryDTO;
 import com.example.springboot_4_initial.models.Category;
 import com.example.springboot_4_initial.services.interfaces.ICategoryService;
 import jakarta.validation.Valid;
@@ -45,6 +46,22 @@ public class CategoryController {
     @GetMapping("/search/{id}")
     public ResponseEntity<?> search(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(iCategoryService.get_category(id));
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> update(@Valid @RequestBody UpdateCategoryDTO updateCategoryDTO, @PathVariable Long id, BindingResult bindingResult) {
+        Map<String, Object> json = new HashMap<>();
+        if (bindingResult.hasErrors()) {
+            bindingResult.getFieldErrors().forEach(error -> {
+                json.put(error.getField(), error.getDefaultMessage());
+            });
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(json);
+        }
+        Category category = new Category(id, updateCategoryDTO.getName(), updateCategoryDTO.getDescription(), updateCategoryDTO.isStatus());
+        iCategoryService.save_category(category);
+        json.put("status", true);
+        json.put("message", "Categoria actualizada");
+        return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 
     @DeleteMapping("/delete/{id}")

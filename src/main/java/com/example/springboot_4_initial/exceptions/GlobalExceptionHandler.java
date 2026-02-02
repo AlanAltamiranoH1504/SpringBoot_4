@@ -9,7 +9,11 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+
+import java.io.IOException;
 
 
 @RestControllerAdvice
@@ -72,6 +76,56 @@ public class GlobalExceptionHandler {
                 .body(iExcepcionService.generateMessageException(
                         "Ocurrio un error en la busqueda de la vacante",
                         "Ocurrio un error en la busqueda de la vacante",
+                        ex.getMessage()
+                ));
+    }
+
+    @ExceptionHandler(NotFoundFile.class)
+    public ResponseEntity<?> handleNotFoundFile(NotFoundFile ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(iExcepcionService.generateMessageException(
+                        "Ocurrio un error en la subida del archio",
+                        "El archivo no fue agregado de manera correcto en el proceso de peticion",
+                        ex.getMessage()
+                ));
+    }
+
+    @ExceptionHandler(NotValidateMimes.class)
+    public ResponseEntity<?> handleNotValidateMimes(NotValidateMimes ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(iExcepcionService.generateMessageException(
+                        "Ocurrio un error en la extension del archivo subido",
+                        "La extension del archivo no se encuentra dentro de las permitidas",
+                        ex.getMessage()
+                ));
+    }
+
+    @ExceptionHandler(MultipartException.class)
+    public ResponseEntity<?> handleMultpartException(MultipartException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(iExcepcionService.generateMessageException(
+                        "Ocurrio un erro en la subida de archivo",
+                        "Se genero en la subida de archivos multiparte",
+                        ex.getMessage()
+                ));
+    }
+
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public ResponseEntity<?> handleMissingServletRequestPartException(MissingServletRequestPartException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(iExcepcionService.generateMessageException(
+                        "Ocurrio un error en la subida de archivo",
+                        "El nombre del archivo en el request no es correcto",
+                        ex.getMessage()
+                ));
+    }
+
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<?> handleIOException(IOException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(iExcepcionService.generateMessageException(
+                        "Ocurrio un error general en el servidor",
+                        "",
                         ex.getMessage()
                 ));
     }

@@ -2,15 +2,15 @@ package com.example.springboot_4_initial.controllers;
 
 import com.example.springboot_4_initial.exceptions.NotFoundVacancys;
 import com.example.springboot_4_initial.models.Vacancy;
+import com.example.springboot_4_initial.services.interfaces.IImageService;
 import com.example.springboot_4_initial.services.interfaces.IVacacyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -18,6 +18,8 @@ import java.util.*;
 public class BaseController {
     @Autowired
     IVacacyService iVacacyService;
+    @Autowired
+    IImageService iImageService;
 
     @GetMapping("")
     public ResponseEntity<?> prueba() {
@@ -49,5 +51,21 @@ public class BaseController {
     @GetMapping("get_vacancy/{id}")
     public ResponseEntity<?> get_vacancy(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(iVacacyService.get_vacancy(id));
+    }
+
+    @PostMapping("/save_img_vacancy/{id}")
+    public ResponseEntity<?> save_img_vacancy(@PathVariable Long id, @RequestParam("file") MultipartFile multipartFile) throws IOException {
+        Map<String, Object> json = new HashMap<>();
+        String path_image = "C:/Imagenes_Proyectos/SpringBoot";
+
+        boolean result_save_img = iImageService.save_image(path_image, multipartFile);
+        if (!result_save_img) {
+            json.put("status", false);
+            json.put("message", "Ocurrio un error en la subida del archivo");
+        }
+        json.put("status", true);
+        json.put("message", "Guardando img correctamente");
+
+        return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 }

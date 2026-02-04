@@ -1,13 +1,14 @@
 package com.example.springboot_4_initial.controllers;
 
-import com.example.springboot_4_initial.dto.CreateCategoriesDTO;
-import com.example.springboot_4_initial.dto.CreateCategoryDTO;
-import com.example.springboot_4_initial.dto.ListCategoriesByIdDTO;
-import com.example.springboot_4_initial.dto.UpdateCategoryDTO;
+import com.example.springboot_4_initial.dto.*;
 import com.example.springboot_4_initial.models.Category;
+import com.example.springboot_4_initial.repositories.ICategoryRepository;
 import com.example.springboot_4_initial.services.interfaces.ICategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -24,6 +25,9 @@ import java.util.Map;
 public class CategoryController {
     @Autowired
     ICategoryService iCategoryService;
+
+    @Autowired
+    ICategoryRepository iCategoryRepository;
 
     @GetMapping("")
     public ResponseEntity<?> list_category() {
@@ -102,7 +106,7 @@ public class CategoryController {
         boolean result_exists_category = iCategoryService.exists_category(id);
         if (result_exists_category) {
             json.put("exists", result_exists_category);
-        }else {
+        } else {
             json.put("exists", result_exists_category);
         }
         return ResponseEntity.status(HttpStatus.OK).body(json);
@@ -133,14 +137,52 @@ public class CategoryController {
         json.put("message", "Array de categorias guardado correctamente");
 
         List<Category> categories = new ArrayList<>();
-        for (var cate: createCategoriesDTO.getCategories()) {
+        for (var cate : createCategoriesDTO.getCategories()) {
             categories.add(new Category(cate.getName(), cate.getDescription(), true));
         }
 
         iCategoryService.create_categories(categories);
         return ResponseEntity.status(HttpStatus.CREATED).body(json);
-
     }
+
+    @DeleteMapping("/delete_all_in_batch")
+    public ResponseEntity<?> delete_all_in_batch(@Valid @RequestBody DeleteAllInBatchDTO deleteAllInBatchDTO, BindingResult bindingResult) {
+        Map<String, Object> json = new HashMap<>();
+        if (bindingResult.hasErrors()) {
+            bindingResult.getFieldErrors().forEach(error -> {
+                json.put(error.getField(), error.getDefaultMessage());
+            });
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(json);
+        }
+        iCategoryService.delete_all_in_batch(deleteAllInBatchDTO.getIds());
+        json.put("status", true);
+        json.put("message", "Categorias eliminada en lote");
+        return ResponseEntity.status(HttpStatus.OK).body(json);
+    }
+
+    @GetMapping("/find_all_order")
+    public ResponseEntity<?> find_all_order() {
+        List<Category> list_categories = iCategoryRepository.findAll(Sort.by("name").descending());
+
+        return ResponseEntity.status(HttpStatus.OK).body(list_categories);
+    }
+
+    @GetMapping("/find_all_paginate")
+    public ResponseEntity<?> find_all_paginate(
+            @RequestParam(name = "page", required = true) int page
+    ) {
+        Page<Category> list = iCategoryRepository.findAll(PageRequest.of(page - 1, 3));
+        return ResponseEntity.status(HttpStatus.OK).body(list);
+    }
+
+    @GetMapping("find_all_order_and_paginate")
+    public ResponseEntity<?> find_all_order_and_paginate(
+            @RequestParam(name = "page") int page
+    ) {
+        Page<Category> list = iCategoryRepository.findAll(PageRequest.of(page - 1, 2).withSort(Sort.by("name").descending()));
+        return ResponseEntity.status(HttpStatus.OK).body(list);
+    }
+
 
     @GetMapping("/params")
     public ResponseEntity<?> params(

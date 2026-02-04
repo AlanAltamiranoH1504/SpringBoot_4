@@ -21,7 +21,7 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public List<Category> list_categories() {
-        List<Category> list_categories = (List<Category>) iCategoryRepository.findAll();
+        List<Category> list_categories = iCategoryRepository.findAll();
         if (list_categories.isEmpty()) {
             throw new NotFoundCategories("No existen categorias registradas en la base de datos");
         }
@@ -89,5 +89,8 @@ public class CategoryService implements ICategoryService {
         return true;
     }
 
-
+    @Override
+    public void delete_all_in_batch(List<Long> id) {
+        iCategoryRepository.deleteAllByIdInBatch(id);
+    }
 }

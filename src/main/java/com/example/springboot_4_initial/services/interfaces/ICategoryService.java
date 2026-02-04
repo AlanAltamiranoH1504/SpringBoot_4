@@ -25,4 +25,6 @@ public interface ICategoryService {
     public abstract List<Category> find_all_by_id(List<Long> ids);
 
     public abstract boolean create_categories(List<Category> categories);
+
+    public abstract void delete_all_in_batch(List<Long> id);
 }

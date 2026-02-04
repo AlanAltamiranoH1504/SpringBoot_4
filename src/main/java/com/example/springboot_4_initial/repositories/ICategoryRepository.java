@@ -8,7 +8,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface ICategoryRepository extends CrudRepository<Category, Long> {
+//public interface ICategoryRepository extends CrudRepository<Category, Long> {
+public interface ICategoryRepository extends JpaRepository<Category, Long> {
     @Query("SELECT c FROM Category c WHERE c.name =:name")
     public abstract Category name_in_use(@Param("name") String name);
 

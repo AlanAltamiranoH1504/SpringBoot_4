@@ -1,5 +1,6 @@
 package com.example.springboot_4_initial.services;
 
+import com.example.springboot_4_initial.dto.CreateCategoryDTO;
 import com.example.springboot_4_initial.exceptions.categories.CreatedCategory;
 import com.example.springboot_4_initial.exceptions.categories.NameCategoryError;
 import com.example.springboot_4_initial.exceptions.categories.NotFoundCategories;
@@ -22,7 +23,7 @@ public class CategoryService implements ICategoryService {
     public List<Category> list_categories() {
         List<Category> list_categories = (List<Category>) iCategoryRepository.findAll();
         if (list_categories.isEmpty()) {
-            throw new NotFoundCategories("No existen categoria registradas en la base de datos");
+            throw new NotFoundCategories("No existen categorias registradas en la base de datos");
         }
         return list_categories;
     }
@@ -57,4 +58,36 @@ public class CategoryService implements ICategoryService {
         iCategoryRepository.save(category_to_delete);
         return true;
     }
+
+    @Override
+    public int count_category() {
+        return iCategoryRepository.count_categories();
+    }
+
+    @Override
+    public void delete_all_soft() {
+        iCategoryRepository.delete_all_soft();;
+    }
+
+    @Override
+    public boolean exists_category(Long id) {
+        return iCategoryRepository.existsById(id);
+    }
+
+    @Override
+    public List<Category> find_all_by_id(List<Long> ids) {
+        List<Category> list_category_by_id = (List<Category>) iCategoryRepository.findAllById(ids);
+        if (list_category_by_id.isEmpty()) {
+            throw new NotFoundCategories("No existen esas categorias regsitradas en la base de datos");
+        }
+        return list_category_by_id;
+    }
+
+    @Override
+    public boolean create_categories(List<Category> categories) {
+        iCategoryRepository.saveAll(categories);
+        return true;
+    }
+
+
 }

@@ -1,6 +1,8 @@
 package com.example.springboot_4_initial.controllers;
 
+import com.example.springboot_4_initial.dto.CreateCategoriesDTO;
 import com.example.springboot_4_initial.dto.CreateCategoryDTO;
+import com.example.springboot_4_initial.dto.ListCategoriesByIdDTO;
 import com.example.springboot_4_initial.dto.UpdateCategoryDTO;
 import com.example.springboot_4_initial.models.Category;
 import com.example.springboot_4_initial.services.interfaces.ICategoryService;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -71,6 +74,72 @@ public class CategoryController {
         json.put("status", true);
         json.put("message", "La categoria fue eliminada correctamente");
         return ResponseEntity.status(HttpStatus.OK).body(json);
+    }
+
+    @GetMapping("/count_categories")
+    public ResponseEntity<?> count_categories() {
+        Map<String, Object> json = new HashMap<>();
+        int total_categories = iCategoryService.count_category();
+        json.put("status", true);
+        json.put("total_categories", total_categories);
+
+        return ResponseEntity.status(HttpStatus.OK).body(json);
+    }
+
+    @DeleteMapping("/delete_all")
+    public ResponseEntity<?> delete_all() {
+        Map<String, Object> json = new HashMap<>();
+        iCategoryService.delete_all_soft();
+
+        json.put("status", true);
+        json.put("message", "Categorias deshabilitadas");
+        return ResponseEntity.status(HttpStatus.OK).body(json);
+    }
+
+    @GetMapping("/exists/{id}")
+    public ResponseEntity<?> exists_category(@PathVariable Long id) {
+        Map<String, Object> json = new HashMap<>();
+        boolean result_exists_category = iCategoryService.exists_category(id);
+        if (result_exists_category) {
+            json.put("exists", result_exists_category);
+        }else {
+            json.put("exists", result_exists_category);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(json);
+    }
+
+    @GetMapping("/list_by_ids")
+    public ResponseEntity<?> list_categories_by_id(@Valid @RequestBody ListCategoriesByIdDTO listCategoriesByIdDTO, BindingResult bindingResult) {
+        Map<String, Object> json = new HashMap<>();
+        if (bindingResult.hasErrors()) {
+            bindingResult.getFieldErrors().forEach(error -> {
+                json.put(error.getField(), error.getDefaultMessage());
+            });
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(json);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(iCategoryService.find_all_by_id(listCategoriesByIdDTO.getIds()));
+    }
+
+    @PostMapping("/save_categories")
+    public ResponseEntity<?> save_categories(@Valid @RequestBody CreateCategoriesDTO createCategoriesDTO, BindingResult bindingResult) {
+        Map<String, Object> json = new HashMap<>();
+        if (bindingResult.hasErrors()) {
+            bindingResult.getFieldErrors().forEach(error -> {
+                json.put(error.getField(), error.getDefaultMessage());
+            });
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(json);
+        }
+        json.put("status", true);
+        json.put("message", "Array de categorias guardado correctamente");
+
+        List<Category> categories = new ArrayList<>();
+        for (var cate: createCategoriesDTO.getCategories()) {
+            categories.add(new Category(cate.getName(), cate.getDescription(), true));
+        }
+
+        iCategoryService.create_categories(categories);
+        return ResponseEntity.status(HttpStatus.CREATED).body(json);
+
     }
 
     @GetMapping("/params")

@@ -2,6 +2,9 @@ package com.example.springboot_4_initial.models;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "tbl_categories")
 public class Category {
@@ -11,6 +14,8 @@ public class Category {
     private String name;
     private String description;
     private boolean status;
+    @OneToMany(mappedBy = "category",fetch = FetchType.LAZY)
+    private List<Vacancy> vacancies = new ArrayList<>();
 
     public Category() {
     }

@@ -1,26 +1,51 @@
 package com.example.springboot_4_initial.models;
 
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import jakarta.persistence.*;
+
 import java.util.Date;
 
+@Entity()
+@Table(name = "tbl_vacancys")
+@JsonPropertyOrder({ "id", "name", "description", "salary", "publication_date", "status", "image", "category", })
 public class Vacancy {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private Date publication_date;
     private String description;
     private double salary;
     private boolean status;
+    private String image;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_category")
+    private Category category;
 
     public Vacancy() {
     }
 
-    public Vacancy(Long id, String name, Date publication_date, String description, double salary, boolean status) {
+    public Vacancy(String name, Date publication_date, String description, double salary, boolean status, String image, Category category) {
+        this.name = name;
+        this.publication_date = publication_date;
+        this.description = description;
+        this.salary = salary;
+        this.status = status;
+        this.image = image;
+        this.category = category;
+    }
+
+    public Vacancy(Long id, String name, Date publication_date, String description, double salary, boolean status, String image, Category category) {
         this.id = id;
         this.name = name;
         this.publication_date = publication_date;
         this.description = description;
         this.salary = salary;
         this.status = status;
+        this.image = image;
+        this.category = category;
     }
 
     public Long getId() {
@@ -71,15 +96,19 @@ public class Vacancy {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return "Vacancy{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", publication_date=" + publication_date +
-                ", description='" + description + '\'' +
-                ", salary=" + salary +
-                ", status=" + status +
-                '}';
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

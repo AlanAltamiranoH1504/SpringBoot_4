@@ -4,6 +4,8 @@ import com.example.springboot_4_initial.exceptions.categories.CreatedCategory;
 import com.example.springboot_4_initial.exceptions.categories.NameCategoryError;
 import com.example.springboot_4_initial.exceptions.categories.NotFoundCategories;
 import com.example.springboot_4_initial.exceptions.categories.NotFoundCategory;
+import com.example.springboot_4_initial.exceptions.vancacies.NotFoundVacancy;
+import com.example.springboot_4_initial.exceptions.vancacies.NotFoundVacancys;
 import com.example.springboot_4_initial.services.interfaces.IExcepcionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;

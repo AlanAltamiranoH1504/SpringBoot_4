@@ -5,6 +5,7 @@ import com.example.springboot_4_initial.exceptions.categories.NameCategoryError;
 import com.example.springboot_4_initial.exceptions.categories.NotFoundCategories;
 import com.example.springboot_4_initial.exceptions.categories.NotFoundCategory;
 import com.example.springboot_4_initial.exceptions.vancacies.ErrorUpdateImgVacancy;
+import com.example.springboot_4_initial.exceptions.vancacies.NotFoundEntityException;
 import com.example.springboot_4_initial.exceptions.vancacies.NotFoundVacancy;
 import com.example.springboot_4_initial.exceptions.vancacies.NotFoundVacancys;
 import com.example.springboot_4_initial.services.interfaces.IExcepcionService;
@@ -205,6 +206,26 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(iExcepcionService.generateMessageException(
                         "La actualizacion de imagen fallo",
+                        "",
+                        ex.getMessage()
+                ));
+    }
+
+    @ExceptionHandler(ListEmptyException.class)
+    public ResponseEntity<?> handleListEmptyException(ListEmptyException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(iExcepcionService.generateMessageException(
+                        "Lista vacia, no existen elementos en el retorno",
+                        "",
+                        ex.getMessage()
+                ));
+    }
+
+    @ExceptionHandler(NotFoundEntityException.class)
+    public ResponseEntity<?> handleNotFoundEntityException(NotFoundEntityException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(iExcepcionService.generateMessageException(
+                        "La busqueda del registro obtuvo un error",
                         "",
                         ex.getMessage()
                 ));

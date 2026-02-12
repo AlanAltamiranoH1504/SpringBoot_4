@@ -1,18 +1,6 @@
 package com.example.springboot_4_initial.controllers;
 
-import com.example.springboot_4_initial.exceptions.vancacies.NotFoundVacancys;
-import com.example.springboot_4_initial.models.Vacancy;
-import com.example.springboot_4_initial.services.interfaces.IImageService;
-import com.example.springboot_4_initial.services.interfaces.IVacacyService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.*;
 
 @RestController
 @RequestMapping("/base")

@@ -1,15 +1,22 @@
 package com.example.springboot_4_initial.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity()
 @Table(name = "tbl_profiles")
 public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String profile;
-    boolean status;
+    private Long id;
+    private String profile;
+    private boolean status;
+    @JsonIgnore
+    @ManyToMany(mappedBy = "profiles")
+    private List<User> users = new ArrayList<>();
 
     public Profile() {
     }
@@ -47,5 +54,13 @@ public class Profile {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 }

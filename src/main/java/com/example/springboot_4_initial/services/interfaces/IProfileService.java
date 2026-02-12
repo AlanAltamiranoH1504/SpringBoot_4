@@ -9,4 +9,5 @@ public interface IProfileService {
     public abstract Profile get_profile(Long id);
     public abstract Profile save_profile(Profile profile);
     public abstract boolean delete_profile(Long id);
+    public abstract List<Profile> get_profiles_by_id(List<Long> ids);
 }

@@ -9,6 +9,7 @@ import com.example.springboot_4_initial.services.interfaces.IProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,5 +51,14 @@ public class ProfileService implements IProfileService {
         profile_to_delete.setStatus(false);
         iProfileRepository.save(profile_to_delete);
         return true;
+    }
+
+    @Override
+    public List<Profile> get_profiles_by_id(List<Long> ids) {
+        List<Profile> profiles_list = iProfileRepository.findAllById(ids);
+        if (profiles_list.isEmpty()) {
+            throw new ListEmptyException("La lista de perfiles a agregar se encuentra vacia, ningun perfil es valido");
+        }
+        return profiles_list;
     }
 }

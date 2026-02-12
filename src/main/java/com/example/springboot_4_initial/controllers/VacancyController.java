@@ -7,6 +7,7 @@ import com.example.springboot_4_initial.models.Category;
 import com.example.springboot_4_initial.models.Vacancy;
 import com.example.springboot_4_initial.repositories.ICategoryRepository;
 import com.example.springboot_4_initial.services.interfaces.ICategoryService;
+import com.example.springboot_4_initial.services.interfaces.IImageService;
 import com.example.springboot_4_initial.services.interfaces.IVacancyService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/vacancy")
@@ -28,6 +32,8 @@ public class VacancyController {
     private ICategoryRepository iCategoryRepository;
     @Autowired
     private ICategoryService iCategoryService;
+    @Autowired
+    private IImageService iImageService;
 
     @GetMapping("/list")
     public ResponseEntity<?> list_vacancies(@Valid @RequestBody ListVacanciesDTO listVacanciesDTO, BindingResult bindingResult) {
@@ -94,6 +100,23 @@ public class VacancyController {
         iVacancyService.delete_vacancy(id);
         json.put("status", true);
         json.put("message", "Vacante eliminada");
+        return ResponseEntity.status(HttpStatus.OK).body(json);
+    }
+
+    @PostMapping("/save_img_vacancy/{id}")
+    public ResponseEntity<?> save_img_vacancy(@PathVariable Long id, @RequestParam("img_vacancy")MultipartFile multipartFile) throws IOException {
+        Map<String, Object> json = new HashMap<>();
+        String path_img = "C:/Imagenes_Proyectos/SpringBoot";
+        this.find_vacancy(id);
+
+        String result_save_img = iImageService.save_image(path_img, multipartFile);
+        if (Objects.equals(result_save_img, "")) {
+            json.put("status", false);
+            json.put("message", "Ocurrio un error en el guardado de la imagen");
+        }
+        this.iVacancyService.update_img_vacancy(result_save_img, id);
+        json.put("status", true);
+        json.put("message", "Imagen de vacante actualizada");
         return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 }

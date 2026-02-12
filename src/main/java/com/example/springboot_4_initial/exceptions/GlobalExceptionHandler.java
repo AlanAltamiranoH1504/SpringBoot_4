@@ -4,6 +4,7 @@ import com.example.springboot_4_initial.exceptions.categories.CreatedCategory;
 import com.example.springboot_4_initial.exceptions.categories.NameCategoryError;
 import com.example.springboot_4_initial.exceptions.categories.NotFoundCategories;
 import com.example.springboot_4_initial.exceptions.categories.NotFoundCategory;
+import com.example.springboot_4_initial.exceptions.vancacies.ErrorUpdateImgVacancy;
 import com.example.springboot_4_initial.exceptions.vancacies.NotFoundVacancy;
 import com.example.springboot_4_initial.exceptions.vancacies.NotFoundVacancys;
 import com.example.springboot_4_initial.services.interfaces.IExcepcionService;
@@ -22,6 +23,8 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @RestControllerAdvice
@@ -190,10 +193,19 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT)
+        Map<String, Object> json = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            json.put(error.getField(), error.getDefaultMessage());
+        });
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(json);
+    }
+
+    @ExceptionHandler(ErrorUpdateImgVacancy.class)
+    public ResponseEntity<?> handleErrorUpdateImgVacancy(ErrorUpdateImgVacancy ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(iExcepcionService.generateMessageException(
-                        "Ocurrio un error el body del request de la peticion",
-                        "El body del request no es valido",
+                        "La actualizacion de imagen fallo",
+                        "",
                         ex.getMessage()
                 ));
     }

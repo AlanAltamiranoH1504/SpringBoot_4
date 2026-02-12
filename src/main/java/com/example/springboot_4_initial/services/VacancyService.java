@@ -1,5 +1,6 @@
 package com.example.springboot_4_initial.services;
 
+import com.example.springboot_4_initial.exceptions.vancacies.ErrorUpdateImgVacancy;
 import com.example.springboot_4_initial.exceptions.vancacies.NotFoundVacancy;
 import com.example.springboot_4_initial.exceptions.vancacies.NotFoundVacancys;
 import com.example.springboot_4_initial.models.Vacancy;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -40,6 +42,11 @@ public class VacancyService implements IVacancyService {
         if (!vacancy_to_show.isPresent()) {
             throw new NotFoundVacancy("El registro de la vacante no fue encontrado");
         }
+        if (vacancy_to_show.get().getImage() != null) {
+            vacancy_to_show.get().setImage(vacancy_to_show.get().getImage().replace("\\", "/"));
+        } else {
+            return vacancy_to_show.get();
+        }
         return vacancy_to_show.get();
     }
 
@@ -49,5 +56,16 @@ public class VacancyService implements IVacancyService {
         vacancy_to_delete.setStatus(false);
         this.save_vacancy(vacancy_to_delete);
         return true;
+    }
+
+    @Override
+    public Vacancy update_img_vacancy(String path_img, Long idVacancy) {
+        Optional<Vacancy> vacancy_to_update = iVacancyRepository.findById(idVacancy);
+        vacancy_to_update.get().setImage(path_img);
+        iVacancyRepository.save(vacancy_to_update.get());
+        if (Objects.equals(vacancy_to_update.get().getImage(), "")) {
+            throw new ErrorUpdateImgVacancy("Ocurrio un error en el guardado de la imagen de la vacante");
+        }
+        return vacancy_to_update.get();
     }
 }

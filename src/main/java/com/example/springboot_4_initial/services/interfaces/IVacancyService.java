@@ -9,4 +9,5 @@ public interface IVacancyService {
     public abstract Vacancy save_vacancy(Vacancy vacancy);
     public abstract Vacancy get_vacancy(Long id);
     public abstract boolean delete_vacancy(Long id);
+    public abstract Vacancy update_img_vacancy(String path_img, Long idVacancy);
 }

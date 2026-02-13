@@ -40,6 +40,11 @@ public class UserService implements IUserService {
         if (user_to_show.isEmpty()) {
             throw new NotFoundEntityException("No se encontro registro de usuario con id " + id + " dentro de la db");
         }
+        if (user_to_show.get().getImg_profile() != null) {
+            user_to_show.get().setImg_profile(user_to_show.get().getImg_profile().replace("\\", "/"));
+        } else {
+            return user_to_show.get();
+        }
         return user_to_show.get();
     }
 
@@ -66,7 +71,10 @@ public class UserService implements IUserService {
 
     @Override
     public boolean delete_user(Long id) {
-        return false;
+        User user_to_delete = this.get_user(id);
+        user_to_delete.setStatus(false);
+        iUserRepository.save(user_to_delete);
+        return true;
     }
 
     @Override
@@ -106,6 +114,14 @@ public class UserService implements IUserService {
             }
         }
         iUserRepository.save(user_to_update);
+        return true;
+    }
+
+    @Override
+    public boolean update_img_profile(Long id_user, String url_img) {
+        Optional<User> user_to_update = iUserRepository.findById(id_user);
+        user_to_update.get().setImg_profile(url_img);
+        iUserRepository.save(user_to_update.get());
         return true;
     }
 }

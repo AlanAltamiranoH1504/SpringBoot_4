@@ -4,6 +4,7 @@ import com.example.springboot_4_initial.dto.user.UpdateUserDTO;
 import com.example.springboot_4_initial.models.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IUserService {
     public abstract List<User> list_users(boolean status);
@@ -14,4 +15,5 @@ public interface IUserService {
     public abstract boolean add_profile(Long id_user, List<Long> id_profiles);
     public abstract boolean remove_profiles(Long id_user, List<Long> ids_profile);
     public abstract boolean update_img_profile(Long id_user, String url_img);
+    public abstract Optional<User> get_user_by_email(String email);
 }

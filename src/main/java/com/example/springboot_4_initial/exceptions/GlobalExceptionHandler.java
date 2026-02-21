@@ -1,5 +1,6 @@
 package com.example.springboot_4_initial.exceptions;
 
+import com.example.springboot_4_initial.exceptions.auth.PasswordIncorrectException;
 import com.example.springboot_4_initial.exceptions.categories.CreatedCategory;
 import com.example.springboot_4_initial.exceptions.categories.NameCategoryError;
 import com.example.springboot_4_initial.exceptions.categories.NotFoundCategories;
@@ -248,6 +249,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(iExcepcionService.generateMessageException(
                         "Ocurrio un error en la actualizacion del perfil de usuario",
+                        "",
+                        ex.getMessage()
+                ));
+    }
+
+    @ExceptionHandler(PasswordIncorrectException.class)
+    public ResponseEntity<?> handlePasswordIncorrectException(PasswordIncorrectException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(iExcepcionService.generateMessageException(
+                        "Ocurrio un error en la validacion del password",
                         "",
                         ex.getMessage()
                 ));

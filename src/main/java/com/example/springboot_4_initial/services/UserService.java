@@ -13,6 +13,7 @@ import com.example.springboot_4_initial.repositories.IUserRepository;
 import com.example.springboot_4_initial.services.interfaces.IUserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -123,5 +124,14 @@ public class UserService implements IUserService {
         user_to_update.get().setImg_profile(url_img);
         iUserRepository.save(user_to_update.get());
         return true;
+    }
+
+    @Override
+    public Optional<User> get_user_by_email(String email) {
+        Optional<User> user_to_found = iUserRepository.get_user_by_email(email);
+        if (user_to_found.isPresent()) {
+            return user_to_found;
+        }
+        throw new NotFoundEntityException("El usuario con el email " + email + " no se encuentra registrado");
     }
 }

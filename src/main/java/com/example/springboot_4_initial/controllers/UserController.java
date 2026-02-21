@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,12 +30,14 @@ public class UserController {
     private IProfileService iProfileService;
     @Autowired
     private IImageService iImageService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/save")
     public ResponseEntity<?> save_user(@Valid @RequestBody CreateUserDTO createUserDTO) {
         Map<String, Object> json = new HashMap<>();
         List<Profile> profiles = iProfileService.get_profiles_by_id(createUserDTO.getProfiles());
-        iUserService.save_user(new User(createUserDTO.getName(), createUserDTO.getSurnames(), createUserDTO.getEmail(), createUserDTO.getUsername(), createUserDTO.getPassword(), createUserDTO.getImg_profile(), true, new Date(), profiles));
+        iUserService.save_user(new User(createUserDTO.getName(), createUserDTO.getSurnames(), createUserDTO.getEmail(), createUserDTO.getUsername(), passwordEncoder.encode(createUserDTO.getPassword()), createUserDTO.getImg_profile(), true, new Date(), profiles));
 
         json.put("status", true);
         json.put("message", "Usuario creado correctamente");

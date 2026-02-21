@@ -1,5 +1,6 @@
 package com.example.springboot_4_initial.services;
 
+import com.example.springboot_4_initial.exceptions.ListEmptyException;
 import com.example.springboot_4_initial.exceptions.vancacies.ErrorUpdateImgVacancy;
 import com.example.springboot_4_initial.exceptions.vancacies.NotFoundVacancy;
 import com.example.springboot_4_initial.exceptions.vancacies.NotFoundVacancys;
@@ -67,5 +68,23 @@ public class VacancyService implements IVacancyService {
             throw new ErrorUpdateImgVacancy("Ocurrio un error en el guardado de la imagen de la vacante");
         }
         return vacancy_to_update.get();
+    }
+
+    @Override
+    public List<Vacancy> list_vacancies_by_category(Long id_category) {
+        List<Vacancy> vacacies_by_category = iVacancyRepository.list_vacancies_by_category(id_category);
+        if (vacacies_by_category.isEmpty()) {
+            throw new ListEmptyException("No existen vacantes registradas en esa categoria");
+        }
+        return vacacies_by_category;
+    }
+
+    @Override
+    public List<Vacancy> list_vacancies_by_name(String name) {
+        List<Vacancy> vacancies_by_name = iVacancyRepository.list_vacancies_by_name(name);
+        if (vacancies_by_name.isEmpty()) {
+            throw new ListEmptyException("No existen vacantes registradas con coincidencias de ese nombre");
+        }
+        return vacancies_by_name;
     }
 }

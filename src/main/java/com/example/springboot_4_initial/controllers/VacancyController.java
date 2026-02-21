@@ -104,7 +104,7 @@ public class VacancyController {
     }
 
     @PostMapping("/save_img_vacancy/{id}")
-    public ResponseEntity<?> save_img_vacancy(@PathVariable Long id, @RequestParam("img_vacancy")MultipartFile multipartFile) throws IOException {
+    public ResponseEntity<?> save_img_vacancy(@PathVariable Long id, @RequestParam("img_vacancy") MultipartFile multipartFile) throws IOException {
         Map<String, Object> json = new HashMap<>();
         String path_img = "C:/Imagenes_Proyectos/SpringBoot";
         this.find_vacancy(id);
@@ -118,5 +118,15 @@ public class VacancyController {
         json.put("status", true);
         json.put("message", "Imagen de vacante actualizada");
         return ResponseEntity.status(HttpStatus.OK).body(json);
+    }
+
+    @GetMapping("/category/{id_category}")
+    public ResponseEntity<?> list_vacancies_by_category(@PathVariable Long id_category) {
+        return ResponseEntity.status(HttpStatus.OK).body(iVacancyService.list_vacancies_by_category(id_category));
+    }
+
+    @GetMapping("/name/{name_vacancy}")
+    public ResponseEntity<?> list_vacancies_by_name(@PathVariable String name_vacancy) {
+        return ResponseEntity.status(HttpStatus.OK).body(iVacancyService.list_vacancies_by_name(name_vacancy));
     }
 }

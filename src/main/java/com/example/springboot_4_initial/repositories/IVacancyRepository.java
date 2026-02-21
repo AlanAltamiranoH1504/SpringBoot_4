@@ -11,5 +11,10 @@ public interface IVacancyRepository extends JpaRepository<Vacancy, Long> {
 
     @Query("SELECT v FROM Vacancy v WHERE v.status = :status")
     public abstract List<Vacancy> list_vacancies(@Param("status") boolean status);
-    Long id(Long id);
+
+    @Query("SELECT v FROM Vacancy v WHERE v.category.id = :id_category")
+    public abstract List<Vacancy> list_vacancies_by_category(@Param("id_category") Long id_category);
+
+    @Query("SELECT v FROM Vacancy v WHERE v.name LIKE %:name%")
+    public abstract List<Vacancy> list_vacancies_by_name(@Param("name") String name);
 }

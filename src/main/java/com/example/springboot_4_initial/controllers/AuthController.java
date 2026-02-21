@@ -1,6 +1,7 @@
 package com.example.springboot_4_initial.controllers;
 
 import com.example.springboot_4_initial.dto.auth.LoginDTO;
+import com.example.springboot_4_initial.security.UserInfoDetails;
 import com.example.springboot_4_initial.services.AuthService;
 import com.example.springboot_4_initial.services.interfaces.IAuthService;
 import jakarta.validation.Valid;

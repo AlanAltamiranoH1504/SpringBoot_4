@@ -7,6 +7,7 @@ import com.example.springboot_4_initial.dto.user.RemoveProfileDTO;
 import com.example.springboot_4_initial.dto.user.UpdateUserDTO;
 import com.example.springboot_4_initial.models.Profile;
 import com.example.springboot_4_initial.models.User;
+import com.example.springboot_4_initial.security.UserInfoDetails;
 import com.example.springboot_4_initial.services.interfaces.IImageService;
 import com.example.springboot_4_initial.services.interfaces.IProfileService;
 import com.example.springboot_4_initial.services.interfaces.IUserService;
@@ -14,6 +15,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -106,5 +108,14 @@ public class UserController {
         json.put("status", true);
         json.put("message", "Usuario eliminado correctamente");
         return ResponseEntity.status(HttpStatus.OK).body(json);
+    }
+
+    @GetMapping("/perfil")
+    public ResponseEntity<?> get_profile(@AuthenticationPrincipal UserInfoDetails user) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", true);
+        response.put("id", user.get_IdUser());
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

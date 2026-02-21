@@ -73,7 +73,7 @@ public class SecurityConfig {
 
                         // ! RUTAS PARA CANDIDATOS AUTENTICADOS
                         .requestMatchers("/users/update_user/**", "/users/update/img_profile/**").hasAnyRole("RECLUTADOR", "CANDIDATO")
-
+                        .requestMatchers("/users/perfil").authenticated()
 
                         // ! RUTAS PARA SUPER ADMIN
                         .requestMatchers(

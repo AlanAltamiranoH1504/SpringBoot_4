@@ -43,8 +43,9 @@ public class JwtFilter extends OncePerRequestFilter {
                 var authorities = user.get().getProfiles().stream()
                         .map(rol -> new SimpleGrantedAuthority(rol.getProfile()))
                         .toList();
+                UserInfoDetails user_details = new UserInfoDetails(user.get());
 
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, authorities);
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user_details, null, authorities);
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }

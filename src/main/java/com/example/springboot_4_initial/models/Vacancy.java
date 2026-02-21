@@ -24,10 +24,14 @@ public class Vacancy {
     @JoinColumn(name = "id_category")
     private Category category;
 
+    @ManyToOne()
+    @JoinColumn(name = "id_user")
+    private User user;
+
     public Vacancy() {
     }
 
-    public Vacancy(String name, Date publication_date, String description, double salary, boolean status, String image, Category category) {
+    public Vacancy(String name, Date publication_date, String description, double salary, boolean status, String image, Category category, User user) {
         this.name = name;
         this.publication_date = publication_date;
         this.description = description;
@@ -35,9 +39,10 @@ public class Vacancy {
         this.status = status;
         this.image = image;
         this.category = category;
+        this.user = user;
     }
 
-    public Vacancy(Long id, String name, Date publication_date, String description, double salary, boolean status, String image, Category category) {
+    public Vacancy(Long id, String name, Date publication_date, String description, double salary, boolean status, String image, Category category, User user) {
         this.id = id;
         this.name = name;
         this.publication_date = publication_date;
@@ -46,6 +51,7 @@ public class Vacancy {
         this.status = status;
         this.image = image;
         this.category = category;
+        this.user = user;
     }
 
     public Long getId() {
@@ -110,5 +116,13 @@ public class Vacancy {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

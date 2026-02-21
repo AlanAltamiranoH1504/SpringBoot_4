@@ -4,15 +4,20 @@ import com.example.springboot_4_initial.dto.vancacy.CreateVacancyDTO;
 import com.example.springboot_4_initial.dto.vancacy.ListVacanciesDTO;
 import com.example.springboot_4_initial.dto.vancacy.UpdateVacancyDTO;
 import com.example.springboot_4_initial.models.Category;
+import com.example.springboot_4_initial.models.User;
 import com.example.springboot_4_initial.models.Vacancy;
 import com.example.springboot_4_initial.repositories.ICategoryRepository;
+import com.example.springboot_4_initial.security.SecurityUtils;
+import com.example.springboot_4_initial.security.UserInfoDetails;
 import com.example.springboot_4_initial.services.interfaces.ICategoryService;
 import com.example.springboot_4_initial.services.interfaces.IImageService;
+import com.example.springboot_4_initial.services.interfaces.IUserService;
 import com.example.springboot_4_initial.services.interfaces.IVacancyService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,6 +39,10 @@ public class VacancyController {
     private ICategoryService iCategoryService;
     @Autowired
     private IImageService iImageService;
+    @Autowired
+    private SecurityUtils securityUtils;
+    @Autowired
+    private IUserService iUserService;
 
     @GetMapping("/list")
     public ResponseEntity<?> list_vacancies(@Valid @RequestBody ListVacanciesDTO listVacanciesDTO, BindingResult bindingResult) {
@@ -58,8 +67,9 @@ public class VacancyController {
         }
 //        Category category = iCategoryRepository.getReferenceById(createVacancyDTO.getCategory());
         Category category = iCategoryService.get_category(createVacancyDTO.getCategory());
+        User user = iUserService.get_user(securityUtils.user_in_sesion().get_IdUser());
 
-        Vacancy vacancy_to_save = new Vacancy(createVacancyDTO.getName(), new Date(), createVacancyDTO.getDescription(), createVacancyDTO.getSalary(), true, null, category);
+        Vacancy vacancy_to_save = new Vacancy(createVacancyDTO.getName(), new Date(), createVacancyDTO.getDescription(), createVacancyDTO.getSalary(), true, null, category, user);
         Vacancy vacancy_created = iVacancyService.save_vacancy(vacancy_to_save);
         json.put("status", true);
         json.put("message", "Vacante agregada correctamente");

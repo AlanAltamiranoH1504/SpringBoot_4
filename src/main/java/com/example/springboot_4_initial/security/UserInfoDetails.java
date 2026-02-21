@@ -15,11 +15,13 @@ public class UserInfoDetails implements UserDetails {
     private static final long serialVersionUID = 1L;
     private String username;
     private String password;
+    private Long id_user;
     private List<GrantedAuthority> authorities;
 
     public UserInfoDetails(User user) {
         this.username = user.getName();
         this.password = user.getPassword();
+        this.id_user = user.getId();
         this.authorities = Arrays.stream(user.getName().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
@@ -38,5 +40,9 @@ public class UserInfoDetails implements UserDetails {
     @Override
     public String getUsername() {
         return this.username;
+    }
+
+    public Long get_IdUser() {
+        return this.id_user;
     }
 }

@@ -22,7 +22,7 @@ public class User {
     private String img_profile;
     private boolean status;
     private Date register_date;
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "tbl_rel_users_profile",
             joinColumns = @JoinColumn(name = "id_user"),

@@ -1,5 +1,6 @@
 package com.example.springboot_4_initial.models;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "tbl_categories")
+@JsonPropertyOrder({"id", "name", "description", "status"})
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

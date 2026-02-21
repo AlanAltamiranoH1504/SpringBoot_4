@@ -29,12 +29,12 @@ public class CategoryController {
     @Autowired
     ICategoryRepository iCategoryRepository;
 
-    @GetMapping("")
+    @GetMapping("/list")
     public ResponseEntity<?> list_category() {
         return ResponseEntity.status(HttpStatus.OK).body(iCategoryService.list_categories());
     }
 
-    @PostMapping("")
+    @PostMapping("/save")
     public ResponseEntity<?> save_category(@Valid @RequestBody CreateCategoryDTO createCategoryDTO, BindingResult bindingResult) {
         Map<String, Object> json = new HashMap<>();
         if (bindingResult.hasErrors()) {

@@ -32,7 +32,7 @@ public class AuthService implements IAuthService {
             throw new NotFoundEntityException("El usuario a buscar no esta registrado");
         }
         if (passwordEncoder.matches(password, user_by_email.get().getPassword())) {
-            return jwtService.generateTokenJWT(user_by_email.get().getEmail());
+            return jwtService.generateTokenJWT(user_by_email.get());
         }
         throw new PasswordIncorrectException("El password es incorrecto");
     }

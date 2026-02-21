@@ -55,9 +55,43 @@ public class SecurityConfig {
                 })
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(request -> request
+                        // ! RUTAS PUBLICAS
                         .requestMatchers("/users/save").permitAll()
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/vacancy/**").authenticated()
+                        .requestMatchers("/vacancy/list").permitAll()
+                        .requestMatchers("/vacancy/find/**").permitAll()
+                        .requestMatchers("/vacancy/category/**").permitAll()
+                        .requestMatchers("/vacancy/name/**").permitAll()
+                        .requestMatchers("/category/list").permitAll()
+                        .requestMatchers("/profiles/list").permitAll()
+
+                        // ! RUTAS PARA RECLUTADORES
+                        .requestMatchers("/vacancy/save").hasAnyRole("RECLURADOR", "ADMINISTRADOR")
+                        .requestMatchers("/vacancy/update/**").hasAnyRole("RECLURADOR", "ADMINISTRADOR")
+                        .requestMatchers("/vacancy/delete/**").hasAnyRole("RECLURADOR", "ADMINISTRADOR")
+                        .requestMatchers("/vacancy/save_img_vacancy/**").hasAnyRole("RECLURADOR", "ADMINISTRADOR")
+
+                        // ! RUTAS PARA CANDIDATOS AUTENTICADOS
+                        .requestMatchers("/users/update_user/**", "/users/update/img_profile/**").hasAnyRole("RECLUTADOR", "CANDIDATO")
+
+
+                        // ! RUTAS PARA SUPER ADMIN
+                        .requestMatchers(
+                                "/users/list",
+                                "/users/find/**",
+                                "/users/add_profile/**",
+                                "/users/remove_profiles/**",
+                                "/category/save_categories",
+                                "/category/save",
+                                "/category/search/**",
+                                "/category/update/**",
+                                "/category/delete/**",
+                                "/category/delete_all",
+                                "/category/save_categories",
+                                "/profiles/save",
+                                "/profiles/find/**",
+                                "/profiles/delete/**"
+                        ).hasRole("ADMINISTRADOR")
                 )
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

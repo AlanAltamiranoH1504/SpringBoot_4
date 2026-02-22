@@ -1,9 +1,11 @@
 package com.example.springboot_4_initial.controllers;
 
+import com.example.springboot_4_initial.dto.auth.ConfirmAccountDTO;
 import com.example.springboot_4_initial.dto.auth.LoginDTO;
 import com.example.springboot_4_initial.security.UserInfoDetails;
 import com.example.springboot_4_initial.services.AuthService;
 import com.example.springboot_4_initial.services.interfaces.IAuthService;
+import com.example.springboot_4_initial.services.interfaces.IUserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,8 @@ import java.util.Map;
 public class AuthController {
     @Autowired
     private IAuthService iAuthService;
+    @Autowired
+    private IUserService iUserService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login_user(@Valid @RequestBody LoginDTO loginDTO) {
@@ -29,5 +33,16 @@ public class AuthController {
         response.put("token", iAuthService.login_user(loginDTO.getEmail(), loginDTO.getPassword()));
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/confirm_account")
+    public ResponseEntity<?> confirm_account(@Valid @RequestBody ConfirmAccountDTO confirmAccountDTO) {
+        Map<String, Object> json = new HashMap<>();
+
+        iUserService.confirm_account(confirmAccountDTO.getToken_confirm_account(), confirmAccountDTO.getRandome_number());
+        json.put("status", true);
+        json.put("message", "Usuario confirmado correctamente");
+
+        return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 }

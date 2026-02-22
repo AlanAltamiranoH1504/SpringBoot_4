@@ -16,4 +16,5 @@ public interface IUserService {
     public abstract boolean remove_profiles(Long id_user, List<Long> ids_profile);
     public abstract boolean update_img_profile(Long id_user, String url_img);
     public abstract Optional<User> get_user_by_email(String email);
+    public abstract boolean confirm_account(String token_confirm_account, String randome_number);
 }

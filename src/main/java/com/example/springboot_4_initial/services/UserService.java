@@ -10,6 +10,7 @@ import com.example.springboot_4_initial.models.Profile;
 import com.example.springboot_4_initial.models.User;
 import com.example.springboot_4_initial.repositories.IProfileRepository;
 import com.example.springboot_4_initial.repositories.IUserRepository;
+import com.example.springboot_4_initial.services.interfaces.IMailService;
 import com.example.springboot_4_initial.services.interfaces.IUserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
 
 @Service
 public class UserService implements IUserService {
@@ -25,6 +28,8 @@ public class UserService implements IUserService {
     private IUserRepository iUserRepository;
     @Autowired
     IProfileRepository iProfileRepository;
+    @Autowired
+    private IMailService iMailService;
 
     @Override
     public List<User> list_users(boolean status) {
@@ -51,10 +56,17 @@ public class UserService implements IUserService {
 
     @Override
     public User save_user(User user) {
+        String uuid = UUID.randomUUID().toString();
+        int randome_number = (int) (Math.random() * 90000) + 10000;
+
         User user_to_save = iUserRepository.save(user);
         if (user_to_save.getId() == null) {
             throw new CreatedEntityException("Ocurrio un error en la creacion del usuario dentro de la db");
         }
+        iMailService.send_mail_confirm_account_reclutador(user.getEmail(), "Confirma tu Cuenta", user.getName(), uuid, randome_number);
+        user_to_save.setToken_confirm_account(uuid);
+        user_to_save.setRandome_number(String.valueOf(randome_number));
+        iUserRepository.save(user_to_save);
         return user_to_save;
     }
 
@@ -133,5 +145,21 @@ public class UserService implements IUserService {
             return user_to_found;
         }
         throw new NotFoundEntityException("El usuario con el email " + email + " no se encuentra registrado");
+    }
+
+    @Override
+    public boolean confirm_account(String token_confirm_account, String randome_number) {
+        Optional<User> user_by_token_confirm_account = iUserRepository.get_user_by_token_confirm_account(token_confirm_account);
+        if (user_by_token_confirm_account.isEmpty()) {
+            throw new NotFoundEntityException("No se encontro algun usuario con el token " + token_confirm_account);
+        }
+        if (!user_by_token_confirm_account.get().getRandome_number().equals(randome_number)) {
+            throw new NotFoundEntityException("Cadena de numeros no valida para el usuario o corrupta");
+        }
+        User user = user_by_token_confirm_account.get();
+        user.setRandome_number(null);
+        user.setToken_confirm_account(null);
+        iUserRepository.save(user);
+        return true;
     }
 }

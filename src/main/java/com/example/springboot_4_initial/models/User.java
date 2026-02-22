@@ -20,6 +20,9 @@ public class User {
     private String username;
     private String password;
     private String img_profile;
+    private String token_confirm_account;
+    private String token_reset_password;
+    private String randome_number;
     private boolean status;
     private Date register_date;
     @ManyToMany(fetch = FetchType.EAGER)
@@ -135,5 +138,29 @@ public class User {
 
     public void setProfiles(List<Profile> profiles) {
         this.profiles = profiles;
+    }
+
+    public String getToken_confirm_account() {
+        return token_confirm_account;
+    }
+
+    public void setToken_confirm_account(String token_confirm_account) {
+        this.token_confirm_account = token_confirm_account;
+    }
+
+    public String getToken_reset_password() {
+        return token_reset_password;
+    }
+
+    public void setToken_reset_password(String token_reset_password) {
+        this.token_reset_password = token_reset_password;
+    }
+
+    public String getRandome_number() {
+        return randome_number;
+    }
+
+    public void setRandome_number(String randome_number) {
+        this.randome_number = randome_number;
     }
 }

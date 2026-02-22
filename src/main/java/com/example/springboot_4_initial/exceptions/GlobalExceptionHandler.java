@@ -1,5 +1,6 @@
 package com.example.springboot_4_initial.exceptions;
 
+import com.example.springboot_4_initial.exceptions.auth.NotCofirmAccountException;
 import com.example.springboot_4_initial.exceptions.auth.PasswordIncorrectException;
 import com.example.springboot_4_initial.exceptions.categories.CreatedCategory;
 import com.example.springboot_4_initial.exceptions.categories.NameCategoryError;
@@ -259,6 +260,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(iExcepcionService.generateMessageException(
                         "Ocurrio un error en la validacion del password",
+                        "",
+                        ex.getMessage()
+                ));
+    }
+
+    @ExceptionHandler(NotCofirmAccountException.class)
+    public ResponseEntity<?> handleNotCofirmAccountException(NotCofirmAccountException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(iExcepcionService.generateMessageException(
+                        "Ocurrio un error en la validación de confirmación de cuenta",
                         "",
                         ex.getMessage()
                 ));

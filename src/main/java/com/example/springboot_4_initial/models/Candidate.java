@@ -1,9 +1,12 @@
 package com.example.springboot_4_initial.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.*;
 
 @Entity()
 @Table(name = "tbl_candidates")
+@JsonPropertyOrder({"id_candidate", "name_candidate", "lastname_candidate", "email", "img_profile", "cellphone", "address", "token_confirm_account", "token_reset_password", "randome_number", "status", "profile"})
 public class Candidate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -11,6 +14,7 @@ public class Candidate {
     private String name_candidate;
     private String lastname_candidate;
     private String email;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private String img_profile;
     private String cellphone;
@@ -18,7 +22,7 @@ public class Candidate {
     private String token_confirm_account;
     private String token_reset_password;
     private String randome_number;
-    private int status;
+    private boolean status;
 
     // * Un candidato pertenece a un perfil
     @ManyToOne()
@@ -28,7 +32,7 @@ public class Candidate {
     public Candidate() {
     }
 
-    public Candidate(String name_candidate, String lastname_candidate, String email, String password, String img_profile, String cellphone, String address, String token_confirm_account, String token_reset_password, String randome_number, int status) {
+    public Candidate(String name_candidate, String lastname_candidate, String email, String password, String img_profile, String cellphone, String address, String token_confirm_account, String token_reset_password, String randome_number, boolean status) {
         this.name_candidate = name_candidate;
         this.lastname_candidate = lastname_candidate;
         this.email = email;
@@ -42,7 +46,7 @@ public class Candidate {
         this.status = status;
     }
 
-    public Candidate(Long id_candidate, String name_candidate, String lastname_candidate, String email, String password, String img_profile, String cellphone, String address, String token_confirm_account, String token_reset_password, String randome_number, int status) {
+    public Candidate(Long id_candidate, String name_candidate, String lastname_candidate, String email, String password, String img_profile, String cellphone, String address, String token_confirm_account, String token_reset_password, String randome_number, boolean status) {
         this.id_candidate = id_candidate;
         this.name_candidate = name_candidate;
         this.lastname_candidate = lastname_candidate;
@@ -57,7 +61,7 @@ public class Candidate {
         this.status = status;
     }
 
-    public Candidate(String name_candidate, String lastname_candidate, String email, String password, String img_profile, String cellphone, String address, String token_confirm_account, String token_reset_password, String randome_number, int status, Profile profile) {
+    public Candidate(String name_candidate, String lastname_candidate, String email, String password, String img_profile, String cellphone, String address, String token_confirm_account, String token_reset_password, String randome_number, boolean status, Profile profile) {
         this.name_candidate = name_candidate;
         this.lastname_candidate = lastname_candidate;
         this.email = email;
@@ -160,11 +164,11 @@ public class Candidate {
         this.randome_number = randome_number;
     }
 
-    public int getStatus() {
+    public boolean getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 

@@ -2,6 +2,7 @@ package com.example.springboot_4_initial.services;
 
 import com.example.springboot_4_initial.dto.candidate.CreateCandidateDTO;
 import com.example.springboot_4_initial.exceptions.CreatedEntityException;
+import com.example.springboot_4_initial.exceptions.ListEmptyException;
 import com.example.springboot_4_initial.exceptions.vancacies.NotFoundEntityException;
 import com.example.springboot_4_initial.models.Candidate;
 import com.example.springboot_4_initial.models.Profile;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -31,12 +33,20 @@ public class CandidateService implements ICandidateService {
 
     @Override
     public List<Candidate> list_candidates(boolean status) {
-        return List.of();
+        List<Candidate> list_candidates = iCandidateRepository.list_candidates(status);
+        if (list_candidates.isEmpty()) {
+            throw new ListEmptyException("La lista de candidatos se encuentra vacia");
+        }
+        return list_candidates;
     }
 
     @Override
     public Candidate get_candidate(Long id_candidate) {
-        return null;
+        Optional<Candidate> candidate = iCandidateRepository.findById(id_candidate);
+        if (candidate.isEmpty()) {
+            throw new NotFoundEntityException("El candidato con el id " + id_candidate + " no existe");
+        }
+        return candidate.get();
     }
 
     @Override
@@ -65,7 +75,7 @@ public class CandidateService implements ICandidateService {
                 uuid,
                 null,
                 String.valueOf(randome_number),
-                1,
+                true,
                 profile_candidate
         );
         iCandidateRepository.save(candiate_to_save);
@@ -89,11 +99,16 @@ public class CandidateService implements ICandidateService {
 
     @Override
     public boolean delete_candidate(Long id_candidate) {
-        return false;
+        Candidate candidate = this.get_candidate(id_candidate);
+        candidate.setStatus(false);
+        iCandidateRepository.save(candidate);
+        return true;
     }
 
     @Override
     public boolean destroy_candidate(Long id_candidate) {
-        return false;
+        Candidate candidate = this.get_candidate(id_candidate);
+        iCandidateRepository.delete(candidate);
+        return true;
     }
 }

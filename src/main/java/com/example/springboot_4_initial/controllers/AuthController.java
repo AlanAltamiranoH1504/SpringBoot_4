@@ -3,9 +3,11 @@ package com.example.springboot_4_initial.controllers;
 import com.example.springboot_4_initial.dto.auth.ConfirmAccountDTO;
 import com.example.springboot_4_initial.dto.auth.ConfirmCandidateDTO;
 import com.example.springboot_4_initial.dto.auth.LoginDTO;
+import com.example.springboot_4_initial.dto.candidate.CreateCandidateDTO;
 import com.example.springboot_4_initial.security.UserInfoDetails;
 import com.example.springboot_4_initial.services.AuthService;
 import com.example.springboot_4_initial.services.interfaces.IAuthService;
+import com.example.springboot_4_initial.services.interfaces.ICandidateService;
 import com.example.springboot_4_initial.services.interfaces.IUserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,8 @@ public class AuthController {
     private IAuthService iAuthService;
     @Autowired
     private IUserService iUserService;
+    @Autowired
+    private ICandidateService iCandidateService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login_user(@Valid @RequestBody LoginDTO loginDTO) {
@@ -34,6 +38,15 @@ public class AuthController {
         response.put("token", iAuthService.login_user(loginDTO.getEmail(), loginDTO.getPassword()));
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/save_candidate")
+    public ResponseEntity<?> save_candidate(@Valid @RequestBody CreateCandidateDTO createCandidateDTO) {
+        Map<String, Object> res = new HashMap<>();
+        iCandidateService.save_candidate(createCandidateDTO);
+        res.put("status", true);
+        res.put("message", "Cuenta creada. Confirma en tu correo electronico.");
+        return ResponseEntity.status(HttpStatus.CREATED).body(res);
     }
 
     @PostMapping("/login_candidate")

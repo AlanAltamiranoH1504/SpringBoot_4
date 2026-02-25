@@ -36,6 +36,14 @@ public class User {
     public User() {
     }
 
+    public User(Long id, String name, String surnames, String email, List<Profile> profiles) {
+        this.id = id;
+        this.name = name;
+        this.surnames = surnames;
+        this.email = email;
+        this.profiles = profiles;
+    }
+
     public User(String name, String surnames, String email, String username, String password, String img_profile, boolean status, Date register_date, List<Profile> profiles) {
         this.name = name;
         this.surnames = surnames;

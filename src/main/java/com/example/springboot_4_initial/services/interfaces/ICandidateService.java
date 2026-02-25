@@ -11,6 +11,8 @@ public interface ICandidateService {
 
     public abstract Candidate get_candidate(Long id_candidate);
 
+    public abstract Candidate get_candidate_by_email(String email);
+
     public abstract Candidate save_candidate(CreateCandidateDTO candidate);
 
     public abstract Candidate update_candidate(Candidate candidate);

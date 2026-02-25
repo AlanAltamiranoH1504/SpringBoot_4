@@ -2,6 +2,7 @@ package com.example.springboot_4_initial.services;
 
 import com.example.springboot_4_initial.dto.candidate.CreateCandidateDTO;
 import com.example.springboot_4_initial.exceptions.CreatedEntityException;
+import com.example.springboot_4_initial.exceptions.vancacies.NotFoundEntityException;
 import com.example.springboot_4_initial.models.Candidate;
 import com.example.springboot_4_initial.models.Profile;
 import com.example.springboot_4_initial.repositories.ICandidateRepository;
@@ -36,6 +37,15 @@ public class CandidateService implements ICandidateService {
     @Override
     public Candidate get_candidate(Long id_candidate) {
         return null;
+    }
+
+    @Override
+    public Candidate get_candidate_by_email(String email) {
+        Candidate candidate = iCandidateRepository.get_candidate_by_email(email);
+        if (candidate == null) {
+            throw new NotFoundEntityException("El candidato con email " + email + " no existe");
+        }
+        return candidate;
     }
 
     @Override

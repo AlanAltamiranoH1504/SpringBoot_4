@@ -36,6 +36,15 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @PostMapping("/login_candidate")
+    public ResponseEntity<?> login_candidate(@Valid @RequestBody LoginDTO loginDTO) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", true);
+        response.put("token", iAuthService.login_candidate(loginDTO.getEmail(), loginDTO.getPassword()));
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @PostMapping("/confirm_account")
     public ResponseEntity<?> confirm_account(@Valid @RequestBody ConfirmAccountDTO confirmAccountDTO) {
         Map<String, Object> json = new HashMap<>();

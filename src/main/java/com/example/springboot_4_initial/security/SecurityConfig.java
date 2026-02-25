@@ -58,7 +58,6 @@ public class SecurityConfig {
                         // ! RUTAS PUBLICAS
                         .requestMatchers("/users/save").permitAll()
                         .requestMatchers("/candidate/save").permitAll()
-                        .requestMatchers("/auth/confirm_candidate").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/vacancy/list").permitAll()
                         .requestMatchers("/vacancy/find/**").permitAll()

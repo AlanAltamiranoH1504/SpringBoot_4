@@ -15,10 +15,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.sql.Array;
+import java.util.*;
 
 @Service
 public class AuthService implements IAuthService {
@@ -49,6 +47,24 @@ public class AuthService implements IAuthService {
         }
         if (passwordEncoder.matches(password, user_by_email.get().getPassword())) {
             return jwtService.generateTokenJWT(user_by_email.get());
+        }
+        throw new PasswordIncorrectException("El password es incorrecto");
+    }
+
+    @Override
+    public String login_candidate(String email, String password) {
+        Candidate candidate_by_email = iCandidateRepository.get_candidate_by_email(email);
+        if (candidate_by_email.getRandome_number() != null || candidate_by_email.getToken_confirm_account() != null) {
+            throw new NotCofirmAccountException("El candidato no ha confirmado su cuenta de manera correcta");
+        }
+        if (passwordEncoder.matches(password, candidate_by_email.getPassword())) {
+            User user = new User(
+                    candidate_by_email.getId_candidate(),
+                    candidate_by_email.getName_candidate(),
+                    candidate_by_email.getLastname_candidate(),
+                    candidate_by_email.getEmail(),
+                    Collections.singletonList(candidate_by_email.getProfile()));
+            return jwtService.generateTokenJWT(user);
         }
         throw new PasswordIncorrectException("El password es incorrecto");
     }

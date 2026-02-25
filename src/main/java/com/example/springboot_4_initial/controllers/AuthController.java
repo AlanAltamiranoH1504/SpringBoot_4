@@ -1,6 +1,7 @@
 package com.example.springboot_4_initial.controllers;
 
 import com.example.springboot_4_initial.dto.auth.ConfirmAccountDTO;
+import com.example.springboot_4_initial.dto.auth.ConfirmCandidateDTO;
 import com.example.springboot_4_initial.dto.auth.LoginDTO;
 import com.example.springboot_4_initial.security.UserInfoDetails;
 import com.example.springboot_4_initial.services.AuthService;
@@ -44,5 +45,14 @@ public class AuthController {
         json.put("message", "Usuario confirmado correctamente");
 
         return ResponseEntity.status(HttpStatus.OK).body(json);
+    }
+
+    @PostMapping("/confirm_candidate")
+    public ResponseEntity<?> confirm_candidate(@Valid @RequestBody ConfirmCandidateDTO confirmCandidateDTO) {
+        Map<String, Object> res = new HashMap<>();
+        boolean result = iAuthService.confirm_candidate_account(confirmCandidateDTO.getToken_confirm_account(), confirmCandidateDTO.getRandome_number());
+        res.put("status", true);
+        res.put("message", "Candidato confirmado correctamente");
+        return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 }

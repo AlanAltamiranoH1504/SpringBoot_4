@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Verificación de Candidato</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body style="margin:0; padding:0; background-color:#f4f7f6; font-family: 'Segoe UI', Arial, sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f7f6; padding: 40px 20px;">
+    <tr>
+        <td align="center">
+
+            <table width="100%" cellpadding="0" cellspacing="0"
+                   style="max-width:600px; background:#ffffff; border-radius:16px; overflow:hidden; box-shadow:0 10px 25px rgba(0,0,0,0.05);">
+
+                <tr>
+                    <td style="background: linear-gradient(135deg, #0f172a, #334155); padding:40px 30px; text-align:center;">
+                        <h1 style="color:#ffffff; margin:0; font-size:24px; letter-spacing: 1px;">
+                            Portal de Candidatos
+                        </h1>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="padding:45px 35px; color:#374151;">
+
+                        <h2 style="margin-top:0; font-size:22px; font-weight:700; color: #111827;">
+                            ¡Bienvenido al equipo, <span th:text="${name_candidate}" style="color:#2563eb;">Candidato</span>! 🚀
+                        </h2>
+
+                        <p style="font-size:16px; line-height:1.7; color:#4b5563;">
+                            Gracias por iniciar tu proceso con nosotros. Para completar tu registro y permitir que nuestros reclutadores vean tu perfil, por favor verifica tu cuenta.
+                        </p>
+
+                        <div style="margin:35px 0; text-align:center;">
+                            <p style="font-size:14px; text-transform:uppercase; letter-spacing:2px; color:#9ca3af; margin-bottom:10px;">Tu código de acceso</p>
+                            <div style="display:inline-block;
+                                        padding:18px 35px;
+                                        background-color:#eff6ff;
+                                        border-radius:12px;
+                                        border:2px dashed #bfdbfe;
+                                        font-size:36px;
+                                        letter-spacing:10px;
+                                        font-weight:800;
+                                        color:#1e40af;">
+                                <span th:text="${randome_number}">654321</span>
+                            </div>
+                        </div>
+
+                        <p style="font-size:14px; color:#6b7280; text-align:center;">
+                            Este código de seguridad expirará en <strong>10 minutos</strong>.
+                        </p>
+
+                        <div style="text-align:center; margin:40px 0;">
+                            <a th:href="${url}"
+                               style="display:inline-block;
+                                      background-color:#2563eb;
+                                      color:#ffffff;
+                                      padding:16px 32px;
+                                      font-size:16px;
+                                      font-weight:600;
+                                      text-decoration:none;
+                                      border-radius:10px;
+                                      transition: background 0.3s ease;">
+                                Completar mi Perfil
+                            </a>
+                        </div>
+
+                        <hr style="border:0; border-top:1px solid #f3f4f6; margin:30px 0;">
+
+                        <p style="font-size:13px; color:#9ca3af; line-height:1.5;">
+                            ¿No has solicitado unirte a nuestro portal? No te preocupes, puedes borrar este correo con seguridad. Tu información no será procesada.
+                        </p>
+
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="background-color:#f9fafb; padding:30px; text-align:center;">
+                        <p style="font-size:12px; color:#6b7280; margin:0;">
+                            © <span th:text="${anio}">2026</span> <strong>Talent Acquisition Team</strong><br>
+                            Estás recibiendo este correo porque te registraste en nuestra bolsa de empleo.
+                        </p>
+                    </td>
+                </tr>
+
+            </table>
+
+            <div style="height:40px;"></div>
+
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

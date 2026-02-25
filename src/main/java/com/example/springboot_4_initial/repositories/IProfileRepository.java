@@ -11,4 +11,7 @@ public interface IProfileRepository extends JpaRepository<Profile, Long> {
 
     @Query("SELECT p FROM Profile p WHERE p.status = :status")
     public abstract List<Profile> list_profiles(@Param("status") boolean status);
+
+    @Query("SELECT p FROM Profile p WHERE p.profile = :name_profile")
+    public abstract Profile get_profile_by_name(@Param("name_profile") String name_profile);
 }

@@ -3,16 +3,13 @@ package com.example.springboot_4_initial.controllers;
 import com.example.springboot_4_initial.dto.auth.ConfirmAccountDTO;
 import com.example.springboot_4_initial.dto.auth.ConfirmCandidateDTO;
 import com.example.springboot_4_initial.dto.auth.LoginDTO;
-import com.example.springboot_4_initial.dto.candidate.CreateCandidateDTO;
-import com.example.springboot_4_initial.security.UserInfoDetails;
-import com.example.springboot_4_initial.services.AuthService;
 import com.example.springboot_4_initial.services.interfaces.IAuthService;
-import com.example.springboot_4_initial.services.interfaces.ICandidateService;
 import com.example.springboot_4_initial.services.interfaces.IUserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,31 +26,13 @@ public class AuthController {
     @Autowired
     private IUserService iUserService;
     @Autowired
-    private ICandidateService iCandidateService;
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     public ResponseEntity<?> login_user(@Valid @RequestBody LoginDTO loginDTO) {
         Map<String, Object> response = new HashMap<>();
         response.put("status", true);
         response.put("token", iAuthService.login_user(loginDTO.getEmail(), loginDTO.getPassword()));
-
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    @PostMapping("/save_candidate")
-    public ResponseEntity<?> save_candidate(@Valid @RequestBody CreateCandidateDTO createCandidateDTO) {
-        Map<String, Object> res = new HashMap<>();
-        iCandidateService.save_candidate(createCandidateDTO);
-        res.put("status", true);
-        res.put("message", "Cuenta creada. Confirma en tu correo electronico.");
-        return ResponseEntity.status(HttpStatus.CREATED).body(res);
-    }
-
-    @PostMapping("/login_candidate")
-    public ResponseEntity<?> login_candidate(@Valid @RequestBody LoginDTO loginDTO) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", true);
-        response.put("token", iAuthService.login_candidate(loginDTO.getEmail(), loginDTO.getPassword()));
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -67,14 +46,5 @@ public class AuthController {
         json.put("message", "Usuario confirmado correctamente");
 
         return ResponseEntity.status(HttpStatus.OK).body(json);
-    }
-
-    @PostMapping("/confirm_candidate")
-    public ResponseEntity<?> confirm_candidate(@Valid @RequestBody ConfirmCandidateDTO confirmCandidateDTO) {
-        Map<String, Object> res = new HashMap<>();
-        boolean result = iAuthService.confirm_candidate_account(confirmCandidateDTO.getToken_confirm_account(), confirmCandidateDTO.getRandome_number());
-        res.put("status", true);
-        res.put("message", "Candidato confirmado correctamente");
-        return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 }

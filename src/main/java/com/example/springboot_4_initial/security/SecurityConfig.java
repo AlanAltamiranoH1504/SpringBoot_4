@@ -72,12 +72,12 @@ public class SecurityConfig {
                         .requestMatchers("/vacancy/delete/**").hasAnyRole("RECLURADOR", "ADMINISTRADOR")
                         .requestMatchers("/vacancy/save_img_vacancy/**").hasAnyRole("RECLURADOR", "ADMINISTRADOR")
                         .requestMatchers("/candidate/find_candidate/**").hasAnyRole("RECLURADOR", "ADMINISTRADOR")
-                        .requestMatchers("/candidate/delete_candidate/**").hasAnyRole("RECLURADOR", "ADMINISTRADOR")
-                        .requestMatchers("/candidate/destroy_candidate/**").hasAnyRole("RECLURADOR", "ADMINISTRADOR")
+
 
                         // ! RUTAS PARA CANDIDATOS AUTENTICADOS
                         .requestMatchers("/users/update_user/**", "/users/update/img_profile/**").hasAnyRole("RECLUTADOR", "CANDIDATO")
                         .requestMatchers("/users/perfil").authenticated()
+                        .requestMatchers("/candidate/update_candidate").hasAnyRole("CANDIDATO")
 
                         // ! RUTAS PARA SUPER ADMIN
                         .requestMatchers(
@@ -87,6 +87,8 @@ public class SecurityConfig {
                                 "/users/remove_profiles/**",
 
                                 "/candidate/list",
+                                "/candidate/destroy_candidate/**",
+                                "/candidate/delete_candidate/**",
 
                                 "/category/save_categories",
                                 "/category/save",

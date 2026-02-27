@@ -30,7 +30,7 @@ public class JwtService {
                         .map(rol -> rol.getProfile())
                         .toList());
 
-        return create_token(claims, user.getEmail(), user.getId());
+        return create_token(claims, user.getEmail(), user.getId_user());
     }
 
     // Generador de token

@@ -19,11 +19,12 @@ public class UserInfoDetails implements UserDetails {
     private List<GrantedAuthority> authorities;
 
     public UserInfoDetails(User user) {
-        this.username = user.getName();
+//        this.username = user.getName();
         this.password = user.getPassword();
-        this.id_user = user.getId();
-        this.authorities = Arrays.stream(user.getName().split(","))
-                .map(SimpleGrantedAuthority::new)
+        this.id_user = user.getId_user();
+        this.authorities = user.getProfiles()
+                .stream()
+                .map(profile -> new SimpleGrantedAuthority(profile.getProfile()))
                 .collect(Collectors.toList());
     }
 

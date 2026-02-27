@@ -2,6 +2,7 @@ package com.example.springboot_4_initial.controllers;
 
 import com.example.springboot_4_initial.dto.auth.ConfirmAccountDTO;
 import com.example.springboot_4_initial.dto.auth.ConfirmCandidateDTO;
+import com.example.springboot_4_initial.dto.auth.CreateRecluiterDTO;
 import com.example.springboot_4_initial.dto.auth.LoginDTO;
 import com.example.springboot_4_initial.services.interfaces.IAuthService;
 import com.example.springboot_4_initial.services.interfaces.IUserService;
@@ -27,6 +28,15 @@ public class AuthController {
     private IUserService iUserService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @PostMapping("/save_recruiter")
+    public ResponseEntity<?> save_recruiter(@Valid @RequestBody CreateRecluiterDTO createRecluiterDTO) {
+        Map<String, Object> res = new HashMap<>();
+        res.put("status", true);
+        res.put("message", "Cuenta reclutador creada correctamente");
+        iAuthService.save_recruiter(createRecluiterDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login_user(@Valid @RequestBody LoginDTO loginDTO) {

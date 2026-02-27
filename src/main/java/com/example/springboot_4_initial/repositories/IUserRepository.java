@@ -16,6 +16,6 @@ public interface IUserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.email = :email")
     public abstract Optional<User> get_user_by_email(@Param("email") String email);
 
-    @Query("SELECT u FROM User u WHERE u.token_confirm_account = :token")
-    public abstract Optional<User> get_user_by_token_confirm_account(@Param("token") String token);
+//    @Query("SELECT u FROM User u WHERE u.token_confirm_account = :token")
+//    public abstract Optional<User> get_user_by_token_confirm_account(@Param("token") String token);
 }

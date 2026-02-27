@@ -43,14 +43,14 @@ public class UserService implements IUserService {
     @Override
     public User get_user(Long id) {
         Optional<User> user_to_show = iUserRepository.findById(id);
-        if (user_to_show.isEmpty()) {
-            throw new NotFoundEntityException("No se encontro registro de usuario con id " + id + " dentro de la db");
-        }
-        if (user_to_show.get().getImg_profile() != null) {
-            user_to_show.get().setImg_profile(user_to_show.get().getImg_profile().replace("\\", "/"));
-        } else {
-            return user_to_show.get();
-        }
+//        if (user_to_show.isEmpty()) {
+//            throw new NotFoundEntityException("No se encontro registro de usuario con id " + id + " dentro de la db");
+//        }
+//        if (user_to_show.get().getImg_profile() != null) {
+//            user_to_show.get().setImg_profile(user_to_show.get().getImg_profile().replace("\\", "/"));
+//        } else {
+//            return user_to_show.get();
+//        }
         return user_to_show.get();
     }
 
@@ -60,13 +60,13 @@ public class UserService implements IUserService {
         int randome_number = (int) (Math.random() * 90000) + 10000;
 
         User user_to_save = iUserRepository.save(user);
-        if (user_to_save.getId() == null) {
-            throw new CreatedEntityException("Ocurrio un error en la creacion del usuario dentro de la db");
-        }
-        iMailService.send_mail_confirm_account_reclutador(user.getEmail(), "Confirma tu Cuenta", user.getName(), uuid, randome_number);
-        user_to_save.setToken_confirm_account(uuid);
-        user_to_save.setRandome_number(String.valueOf(randome_number));
-        iUserRepository.save(user_to_save);
+//        if (user_to_save.getId() == null) {
+//            throw new CreatedEntityException("Ocurrio un error en la creacion del usuario dentro de la db");
+//        }
+//        iMailService.send_mail_confirm_account_reclutador(user.getEmail(), "Confirma tu Cuenta", user.getName(), uuid, randome_number);
+//        user_to_save.setToken_confirm_account(uuid);
+//        user_to_save.setRandome_number(String.valueOf(randome_number));
+//        iUserRepository.save(user_to_save);
         return user_to_save;
     }
 
@@ -85,7 +85,7 @@ public class UserService implements IUserService {
     @Override
     public boolean delete_user(Long id) {
         User user_to_delete = this.get_user(id);
-        user_to_delete.setStatus(false);
+//        user_to_delete.setStatus(false);
         iUserRepository.save(user_to_delete);
         return true;
     }
@@ -132,9 +132,9 @@ public class UserService implements IUserService {
 
     @Override
     public boolean update_img_profile(Long id_user, String url_img) {
-        Optional<User> user_to_update = iUserRepository.findById(id_user);
-        user_to_update.get().setImg_profile(url_img);
-        iUserRepository.save(user_to_update.get());
+//        Optional<User> user_to_update = iUserRepository.findById(id_user);
+//        user_to_update.get().setImg_profile(url_img);
+//        iUserRepository.save(user_to_update.get());
         return true;
     }
 
@@ -149,17 +149,17 @@ public class UserService implements IUserService {
 
     @Override
     public boolean confirm_account(String token_confirm_account, String randome_number) {
-        Optional<User> user_by_token_confirm_account = iUserRepository.get_user_by_token_confirm_account(token_confirm_account);
-        if (user_by_token_confirm_account.isEmpty()) {
-            throw new NotFoundEntityException("No se encontro algun usuario con el token " + token_confirm_account);
-        }
-        if (!user_by_token_confirm_account.get().getRandome_number().equals(randome_number)) {
-            throw new NotFoundEntityException("Cadena de numeros no valida para el usuario o corrupta");
-        }
-        User user = user_by_token_confirm_account.get();
-        user.setRandome_number(null);
-        user.setToken_confirm_account(null);
-        iUserRepository.save(user);
+//        Optional<User> user_by_token_confirm_account = iUserRepository.get_user_by_token_confirm_account(token_confirm_account);
+//        if (user_by_token_confirm_account.isEmpty()) {
+//            throw new NotFoundEntityException("No se encontro algun usuario con el token " + token_confirm_account);
+//        }
+//        if (!user_by_token_confirm_account.get().getRandome_number().equals(randome_number)) {
+//            throw new NotFoundEntityException("Cadena de numeros no valida para el usuario o corrupta");
+//        }
+//        User user = user_by_token_confirm_account.get();
+//        user.setRandome_number(null);
+//        user.setToken_confirm_account(null);
+//        iUserRepository.save(user);
         return true;
     }
 }

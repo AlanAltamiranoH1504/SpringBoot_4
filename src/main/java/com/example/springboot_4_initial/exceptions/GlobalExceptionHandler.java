@@ -274,4 +274,14 @@ public class GlobalExceptionHandler {
                         ex.getMessage()
                 ));
     }
+
+    @ExceptionHandler(CreatedEntityException.class)
+    public ResponseEntity<?> handleCreatedEntityException(CreatedEntityException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(iExcepcionService.generateMessageException(
+                        "Ocurrio un error en la creacion del usuario",
+                        "",
+                        ex.getMessage()
+                ));
+    }
 }

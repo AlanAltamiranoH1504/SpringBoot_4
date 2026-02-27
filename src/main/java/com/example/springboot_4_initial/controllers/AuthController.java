@@ -2,6 +2,8 @@ package com.example.springboot_4_initial.controllers;
 
 import com.example.springboot_4_initial.dto.auth.*;
 import com.example.springboot_4_initial.services.interfaces.IAuthService;
+import com.example.springboot_4_initial.services.interfaces.ICandidateService;
+import com.example.springboot_4_initial.services.interfaces.IRecruiterService;
 import com.example.springboot_4_initial.services.interfaces.IUserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,9 @@ public class AuthController {
     @Autowired
     private IUserService iUserService;
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private ICandidateService iCandidateService;
+    @Autowired
+    private IRecruiterService iRecruiterService;
 
     @PostMapping("/save_recruiter")
     public ResponseEntity<?> save_recruiter(@Valid @RequestBody CreateRecluiterDTO createRecluiterDTO) {
@@ -55,14 +59,24 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping("/confirm_account")
+    @PostMapping("/confirm_account_recluiter")
     public ResponseEntity<?> confirm_account(@Valid @RequestBody ConfirmAccountDTO confirmAccountDTO) {
         Map<String, Object> json = new HashMap<>();
 
-        iUserService.confirm_account(confirmAccountDTO.getToken_confirm_account(), confirmAccountDTO.getRandome_number());
+        iRecruiterService.confirm_account(confirmAccountDTO.getToken_confirm_account(), confirmAccountDTO.getRandome_number());
         json.put("status", true);
         json.put("message", "Usuario confirmado correctamente");
 
+        return ResponseEntity.status(HttpStatus.OK).body(json);
+    }
+
+    @PostMapping("/confirm_candidate")
+    public ResponseEntity<?> confirm_candidate(@Valid @RequestBody ConfirmCandidateDTO confirmCandidateDTO) {
+        Map<String, Object> json = new HashMap<>();
+
+        iCandidateService.confirm_account(confirmCandidateDTO.getToken_confirm_account(), confirmCandidateDTO.getRandome_number());
+        json.put("status", true);
+        json.put("message", "Usuario confirmado correctamente");
         return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 }

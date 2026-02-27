@@ -10,4 +10,5 @@ public interface ICandidateService {
     public Candidate save_candidate(Candidate candidate);
     public Candidate get_candidate();
     public void delete_candidate(Long id_candidate);
+    public Candidate confirm_account(String token_confirm_account, String randome_number);
 }

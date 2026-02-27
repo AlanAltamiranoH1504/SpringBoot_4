@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -20,6 +21,7 @@ public class MailService implements IMailService {
     @Value("${url.front}")
     String url_front;
 
+    @Async
     @Override
     public void send_mail_confirm_account_reclutador(String to, String subject, String name_user, String url, int randome_number) {
         Context context = new Context();
@@ -40,6 +42,7 @@ public class MailService implements IMailService {
         }
     }
 
+    @Async
     @Override
     public void send_mail_confirm_account_candidate(String to, String subject, String name_candidate, String url, int randome_number) {
         Context context = new Context();

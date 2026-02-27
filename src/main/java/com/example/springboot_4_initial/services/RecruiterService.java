@@ -1,7 +1,9 @@
 package com.example.springboot_4_initial.services;
 
 import com.example.springboot_4_initial.exceptions.CreatedEntityException;
+import com.example.springboot_4_initial.exceptions.vancacies.NotFoundEntityException;
 import com.example.springboot_4_initial.models.Recruiter;
+import com.example.springboot_4_initial.models.User;
 import com.example.springboot_4_initial.repositories.IRecruiterRepository;
 import com.example.springboot_4_initial.services.interfaces.IRecruiterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,5 +57,21 @@ public class RecruiterService implements IRecruiterService {
             }
             return false;
         }
+    }
+
+    @Override
+    public boolean confirm_account(String token_confirm_account, String randome_number) {
+        Recruiter recruiter_by_token_confirm_account = iRecruiterRepository.get_recruiter_by_token_account(token_confirm_account);
+        if (recruiter_by_token_confirm_account == null) {
+            throw new NotFoundEntityException("No se encontro algun usuario con el token " + token_confirm_account);
+        }
+        if (!recruiter_by_token_confirm_account.getRandome_number().equals(randome_number)) {
+            throw new NotFoundEntityException("Cadena de numeros no valida o corrupta para el reclutador");
+        }
+
+        recruiter_by_token_confirm_account.setRandome_number(null);
+        recruiter_by_token_confirm_account.setToken_confirm_account(null);
+        iRecruiterRepository.save(recruiter_by_token_confirm_account);
+        return true;
     }
 }

@@ -1,18 +1,17 @@
 package com.example.springboot_4_initial.services;
 
+import com.example.springboot_4_initial.dto.auth.CreateCandidateDTO;
 import com.example.springboot_4_initial.dto.auth.CreateRecluiterDTO;
 import com.example.springboot_4_initial.exceptions.CreatedEntityException;
 import com.example.springboot_4_initial.exceptions.auth.NotCofirmAccountException;
 import com.example.springboot_4_initial.exceptions.auth.PasswordIncorrectException;
 import com.example.springboot_4_initial.exceptions.vancacies.NotFoundEntityException;
+import com.example.springboot_4_initial.models.Candidate;
 import com.example.springboot_4_initial.models.Profile;
 import com.example.springboot_4_initial.models.Recruiter;
 import com.example.springboot_4_initial.models.User;
 import com.example.springboot_4_initial.security.JwtService;
-import com.example.springboot_4_initial.services.interfaces.IAuthService;
-import com.example.springboot_4_initial.services.interfaces.IProfileService;
-import com.example.springboot_4_initial.services.interfaces.IRecruiterService;
-import com.example.springboot_4_initial.services.interfaces.IUserService;
+import com.example.springboot_4_initial.services.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,6 +33,8 @@ public class AuthService implements IAuthService {
     private IProfileService iProfileService;
     @Autowired
     private IRecruiterService iRecruiterService;
+    @Autowired
+    private ICandidateService iCandidateService;
 
 
     @Transactional
@@ -68,12 +69,41 @@ public class AuthService implements IAuthService {
         return recruiter;
     }
 
+    @Transactional
+    @Override
+    public Candidate save_candidate(CreateCandidateDTO createCandidateDTO) {
+        // * Save tbl_user
+        List<Profile> profiles_candidate = this.get_profiles(createCandidateDTO.getRoles());
+        String uuid = UUID.randomUUID().toString();
+        int randome_number = (int) (Math.random() * 10000);
+        User user = new User(createCandidateDTO.getEmail(), passwordEncoder.encode(createCandidateDTO.getPassword()), true, profiles_candidate);
+        iUserService.save_user(user);
+        if (user.getId_user() == null) {
+            throw new CreatedEntityException("Ocurrio un error en la creacion del perfil de candidato");
+        }
+        Candidate candidate = new Candidate(
+                createCandidateDTO.getName_candidate(),
+                createCandidateDTO.getLastname_candidate(),
+                null,
+                createCandidateDTO.getCellphone(),
+                createCandidateDTO.getAddress(),
+                uuid,
+                null,
+                String.valueOf(randome_number),
+                true,
+                user
+        );
+        iCandidateService.save_candidate(candidate);
+        mailService.send_mail_confirm_account_candidate(user.getEmail(), "Confirma tu cuenta", candidate.getName_candidate(), uuid, randome_number);
+        return candidate;
+    }
+
     @Override
     public List<Profile> get_profiles(List<Long> id_profiles) {
         List<Profile> valid_profiles = new ArrayList<>();
         for (var p : id_profiles) {
             Profile profile_to_get = iProfileService.get_profile(p);
-            if (profile_to_get.getProfile().equals("ROLE_RECLUTADOR")) {
+            if (profile_to_get.getProfile().equals("ROLE_RECLUTADOR") || profile_to_get.getProfile().equals("ROLE_CANDIDATO")) {
                 valid_profiles.add(profile_to_get);
             }
         }
@@ -88,13 +118,33 @@ public class AuthService implements IAuthService {
             throw new NotFoundEntityException("El usuario a buscar no esta registrado");
         }
 
-        System.out.println(user_by_email.get().getRecruiter().getId_recruiter());
-        // * Search table_
-//        if (user_by_email.get().getRandome_number() != null && user_by_email.get().getToken_confirm_account() != null) {
-//            User user = user_by_email.get();
-//            iUserService.save_user(user);
-//            throw new NotCofirmAccountException("El usuario no ha confirmado su cuenta de manera correcta. Verifica tu correo para confirmación");
-//        }
+        if (user_by_email.get().getCandidate() != null) {
+            // * Candidate
+            Candidate candidate = user_by_email.get().getCandidate();
+            if (candidate.getToken_confirm_account() != null) {
+                mailService.send_mail_confirm_account_candidate(
+                        user_by_email.get().getEmail(),
+                        "Confirma tu Cuenta",
+                        candidate.getName_candidate(),
+                        candidate.getToken_confirm_account(),
+                        Integer.parseInt(candidate.getRandome_number())
+                );
+                throw new NotCofirmAccountException("El usuario candidato no ha confirmado su cuenta de manera correcta. Verifica tu correo para confirmación");
+            }
+        } else if (user_by_email.get().getRecruiter() != null) {
+            // * Recluiter
+            Recruiter recruiter = user_by_email.get().getRecruiter();
+            if (recruiter.getToken_confirm_account() != null) {
+                mailService.send_mail_confirm_account_reclutador(
+                        user_by_email.get().getEmail(),
+                        "Confirma tu cuenta",
+                        recruiter.getName(),
+                        recruiter.getToken_confirm_account(),
+                        Integer.parseInt(recruiter.getRandome_number())
+                );
+                throw new NotCofirmAccountException("El usuario reckutador no ha confirmado su cuenta de manera correcta. Verifica tu correo para confirmación");
+            }
+        }
         if (passwordEncoder.matches(password, user_by_email.get().getPassword())) {
             return jwtService.generateTokenJWT(user_by_email.get());
         }

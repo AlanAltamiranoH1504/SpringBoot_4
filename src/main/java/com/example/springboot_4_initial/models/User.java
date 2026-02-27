@@ -24,8 +24,12 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "id_profile")
     )
     private List<Profile> profiles = new ArrayList<>();
+
     @OneToOne(mappedBy = "user")
     private Recruiter recruiter;
+
+    @OneToOne(mappedBy = "user")
+    private Candidate candidate;
 
     public User() {
     }
@@ -97,5 +101,13 @@ public class User {
 
     public void setRecruiter(Recruiter recruiter) {
         this.recruiter = recruiter;
+    }
+
+    public Candidate getCandidate() {
+        return candidate;
+    }
+
+    public void setCandidate(Candidate candidate) {
+        this.candidate = candidate;
     }
 }

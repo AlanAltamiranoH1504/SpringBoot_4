@@ -1,9 +1,6 @@
 package com.example.springboot_4_initial.controllers;
 
-import com.example.springboot_4_initial.dto.auth.ConfirmAccountDTO;
-import com.example.springboot_4_initial.dto.auth.ConfirmCandidateDTO;
-import com.example.springboot_4_initial.dto.auth.CreateRecluiterDTO;
-import com.example.springboot_4_initial.dto.auth.LoginDTO;
+import com.example.springboot_4_initial.dto.auth.*;
 import com.example.springboot_4_initial.services.interfaces.IAuthService;
 import com.example.springboot_4_initial.services.interfaces.IUserService;
 import jakarta.validation.Valid;
@@ -32,9 +29,20 @@ public class AuthController {
     @PostMapping("/save_recruiter")
     public ResponseEntity<?> save_recruiter(@Valid @RequestBody CreateRecluiterDTO createRecluiterDTO) {
         Map<String, Object> res = new HashMap<>();
+        iAuthService.save_recruiter(createRecluiterDTO);
+
         res.put("status", true);
         res.put("message", "Cuenta reclutador creada correctamente");
-        iAuthService.save_recruiter(createRecluiterDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
+    @PostMapping("/save_candidate")
+    private ResponseEntity<?> save_candidate(@Valid @RequestBody CreateCandidateDTO createCandidateDTO) {
+        Map<String, Object> res = new HashMap<>();
+        iAuthService.save_candidate(createCandidateDTO);
+
+        res.put("status", true);
+        res.put("message", "Cuenta candidato creada correctamente");
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 

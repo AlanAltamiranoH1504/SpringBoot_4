@@ -1,9 +1,11 @@
 package com.example.springboot_4_initial.models;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.*;
 
 @Entity()
 @Table(name = "tbl_tbl_recruiter")
+@JsonPropertyOrder({"id_recruiter", "name", "surnames", "username", "img_profile", "token_confirm_account", "token_reset_password", "randome_number", "status", "user"})
 public class Recruiter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

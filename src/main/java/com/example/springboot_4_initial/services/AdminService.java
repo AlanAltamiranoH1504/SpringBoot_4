@@ -2,12 +2,9 @@ package com.example.springboot_4_initial.services;
 
 import com.example.springboot_4_initial.dto.auth.CreateSuperAdminDTO;
 import com.example.springboot_4_initial.exceptions.CreatedEntityException;
-import com.example.springboot_4_initial.models.Admin;
-import com.example.springboot_4_initial.models.Profile;
-import com.example.springboot_4_initial.models.User;
-import com.example.springboot_4_initial.repositories.IAdminRepository;
-import com.example.springboot_4_initial.repositories.IProfileRepository;
-import com.example.springboot_4_initial.repositories.IUserRepository;
+import com.example.springboot_4_initial.exceptions.ListEmptyException;
+import com.example.springboot_4_initial.models.*;
+import com.example.springboot_4_initial.repositories.*;
 import com.example.springboot_4_initial.services.interfaces.IAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,12 +23,38 @@ public class AdminService implements IAdminService {
     @Autowired
     private IProfileRepository iProfileRepository;
     @Autowired
+    private IRecruiterRepository iRecruiterRepository;
+    @Autowired
+    private ICandidateRepository iCandidateRepository;
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
 
     @Override
     public List<Admin> list_admin(boolean status) {
-        return List.of();
+        List<Admin> admins = iAdminRepository.admins_by_status(status);
+        if (admins.isEmpty()) {
+            throw new ListEmptyException("La lista de administradores se encuentra vacia");
+        }
+        return admins;
+    }
+
+    @Override
+    public List<Recruiter> list_recruiters(boolean status) {
+        List<Recruiter> recruiters = iRecruiterRepository.list_recruiters(status);
+        if (recruiters.isEmpty()) {
+            throw new ListEmptyException("La lista de reclutadores se encuentra vacia");
+        }
+        return recruiters;
+    }
+
+    @Override
+    public List<Candidate> list_candidates(boolean status) {
+        List<Candidate> candidates = iCandidateRepository.candidates_by_status(status);
+        if (candidates.isEmpty()) {
+            throw new ListEmptyException("La lista de candidatos se encuentra vacia");
+        }
+        return candidates;
     }
 
     @Override

@@ -79,6 +79,8 @@ public class SecurityConfig {
 
                         // ! RUTAS PARA SUPER ADMIN
                         .requestMatchers(
+                                "/admin/**",
+
                                 "/users/list",
                                 "/users/find/**",
                                 "/users/add_profile/**",

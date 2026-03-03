@@ -1,5 +1,6 @@
 package com.example.springboot_4_initial.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.*;
 
@@ -9,7 +10,7 @@ import java.util.List;
 
 @Entity()
 @Table(name = "tbl_users")
-@JsonPropertyOrder({"id", "email", "password", "profiles"})
+@JsonPropertyOrder({"id_user", "email", "password", "status", "profiles"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,12 +26,15 @@ public class User {
     )
     private List<Profile> profiles = new ArrayList<>();
 
+    @JsonIgnore
     @OneToOne(mappedBy = "user")
     private Recruiter recruiter;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "user")
     private Candidate candidate;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "user")
     private Admin admin;
 

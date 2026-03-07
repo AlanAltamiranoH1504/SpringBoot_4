@@ -8,5 +8,5 @@ import java.util.Map;
 @RestController
 @RequestMapping("/candidate")
 public class CandidateController {
-
+ // ! Agregar metodos para candidatos
 }

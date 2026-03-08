@@ -2,7 +2,9 @@ package com.example.springboot_4_initial.services;
 
 import com.example.springboot_4_initial.dto.ShowEntityDTO;
 import com.example.springboot_4_initial.dto.auth.CreateCandidateDTO;
+import com.example.springboot_4_initial.dto.candidate.UpdateCandidateDTO;
 import com.example.springboot_4_initial.exceptions.NotFoundEntity;
+import com.example.springboot_4_initial.exceptions.UpdateException;
 import com.example.springboot_4_initial.exceptions.auth.NotCofirmAccountException;
 import com.example.springboot_4_initial.exceptions.vancacies.NotFoundEntityException;
 import com.example.springboot_4_initial.models.Candidate;
@@ -12,6 +14,7 @@ import com.example.springboot_4_initial.services.interfaces.ICandidateService;
 import com.example.springboot_4_initial.services.interfaces.ICloudinaryService;
 import com.example.springboot_4_initial.services.interfaces.ICryptoService;
 import com.example.springboot_4_initial.services.interfaces.IUserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +36,6 @@ public class CandidateService implements ICandidateService {
     @Autowired
     private ICloudinaryService iCloudinaryService;
 
-
     @Override
     public List<Candidate> list_candidate(boolean status) {
         return List.of();
@@ -43,6 +45,40 @@ public class CandidateService implements ICandidateService {
     @Override
     public Candidate save_candidate(Candidate candidate) {
         return iCandidateRepository.save(candidate);
+    }
+
+    @Override
+    public Candidate update_candidate(UpdateCandidateDTO updateCandidateDTO) {
+        Optional<User> email_in_use = iUserService.get_user_by_email(updateCandidateDTO.getEmail());
+        Long id_user_decrypt = iCryptoService.decrypt(updateCandidateDTO.getId_candidate_crypt());
+
+        if (email_in_use.isPresent() && email_in_use.get().getId_user() != id_user_decrypt) {
+            throw new UpdateException("El email que se pretende guardar ya se encuentra en uso por otro usuario");
+        }
+
+        // ! Busqueda de perfil candidato y actualizacion
+        User user_to_update = iUserService.get_user(id_user_decrypt);
+        Candidate candidate_user = user_to_update.getCandidate();
+
+//        // ! Update img profile
+//        if (!file.isEmpty()) {
+//            if (candidate_user.getImg_profile() == null) {
+//                Map result_cloudinary = iCloudinaryService.upload(file);
+//                candidate_user.setImg_profile(result_cloudinary.get("url").toString());
+//                candidate_user.setPublic_id_img(result_cloudinary.get("public_id").toString());
+//            } else {
+//                boolean resut_delete = iCloudinaryService.delete_image(candidate_user.getPublic_id_img());
+//                Map result_cloudinary = iCloudinaryService.upload(file);
+//                candidate_user.setImg_profile(result_cloudinary.get("url").toString());
+//                candidate_user.setPublic_id_img(result_cloudinary.get("public_id").toString());
+//            }
+//        }
+        user_to_update.setEmail(updateCandidateDTO.getEmail());
+        BeanUtils.copyProperties(updateCandidateDTO, candidate_user);
+
+        // ! Guardado de informacion
+        iUserService.save_user(user_to_update);
+        return candidate_user;
     }
 
     // * Metodo para administradores y reclutadores

@@ -85,7 +85,8 @@ public class SecurityConfig {
                                 .requestMatchers(
                                         "/candidate/update_candidate",
                                         "/candidate/show_candidate",
-                                        "/candidate/update_img_profile/**"
+                                        "/candidate/update_img_profile/**",
+                                        "/candidate/update_candidate"
                                 ).hasAnyRole("CANDIDATO", "RECLUTADOR")
 
                                 // ! RUTAS PARA SUPER ADMIN

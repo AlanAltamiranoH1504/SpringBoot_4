@@ -1,6 +1,7 @@
 package com.example.springboot_4_initial.controllers;
 
 import com.example.springboot_4_initial.dto.ShowEntityDTO;
+import com.example.springboot_4_initial.dto.candidate.UpdateCandidateDTO;
 import com.example.springboot_4_initial.services.interfaces.ICandidateService;
 import com.example.springboot_4_initial.services.interfaces.IResponseService;
 import jakarta.validation.Valid;
@@ -44,6 +45,14 @@ public class CandidateController {
         iCandidateService.update_img_profile(img_profile, id_candidate_crypt);
         return ResponseEntity.status(HttpStatus.OK).body(
                 iResponseService.generate_response(true, "Imagen de candidato guardada correctamente")
+        );
+    }
+
+    @PutMapping("/update_candidate")
+    public ResponseEntity<?> update_candiate(@Valid @RequestBody UpdateCandidateDTO updateCandidateDTO) {
+        iCandidateService.update_candidate(updateCandidateDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                iResponseService.generate_response(true, "Candidato Actualizado correctamente")
         );
     }
 }

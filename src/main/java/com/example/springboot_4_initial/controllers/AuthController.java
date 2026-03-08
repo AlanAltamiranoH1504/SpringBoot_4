@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +23,10 @@ public class AuthController {
     private IRecruiterService iRecruiterService;
     @Autowired
     private IAdminService iAdminService;
+    @Autowired
+    private IResponseService iResponseService;
+    @Autowired
+    private ICryptoService iCryptoService;
 
     @PostMapping("/save_recruiter")
     public ResponseEntity<?> save_recruiter(@Valid @RequestBody CreateRecluiterDTO createRecluiterDTO) {
@@ -85,5 +86,11 @@ public class AuthController {
         json.put("status", true);
         json.put("message", "Usuario confirmado correctamente");
         return ResponseEntity.status(HttpStatus.OK).body(json);
+    }
+
+    @GetMapping("/decrypt/{id_crypt}")
+    public ResponseEntity<?> decrypt_id_user(@PathVariable("id_crypt") String id_crytp) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iResponseService.generate_response(true, String.valueOf(iCryptoService.decrypt(id_crytp))));
     }
 }

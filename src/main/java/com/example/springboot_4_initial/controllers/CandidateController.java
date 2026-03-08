@@ -52,7 +52,7 @@ public class CandidateController {
     public ResponseEntity<?> update_candiate(@Valid @RequestBody UpdateCandidateDTO updateCandidateDTO) {
         iCandidateService.update_candidate(updateCandidateDTO);
         return ResponseEntity.status(HttpStatus.OK).body(
-                iResponseService.generate_response(true, "Candidato Actualizado correctamente")
+                iResponseService.generate_response(true, "Candidato Actualizado correctamente. Inicia sesion nuevamente.")
         );
     }
 }

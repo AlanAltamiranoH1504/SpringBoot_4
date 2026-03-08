@@ -10,6 +10,7 @@ import com.example.springboot_4_initial.exceptions.vancacies.NotFoundEntityExcep
 import com.example.springboot_4_initial.models.Candidate;
 import com.example.springboot_4_initial.models.User;
 import com.example.springboot_4_initial.repositories.ICandidateRepository;
+import com.example.springboot_4_initial.repositories.IUserRepository;
 import com.example.springboot_4_initial.services.interfaces.ICandidateService;
 import com.example.springboot_4_initial.services.interfaces.ICloudinaryService;
 import com.example.springboot_4_initial.services.interfaces.ICryptoService;
@@ -34,6 +35,8 @@ public class CandidateService implements ICandidateService {
     @Autowired
     private IUserService iUserService;
     @Autowired
+    private IUserRepository iUserRepository;
+    @Autowired
     private ICloudinaryService iCloudinaryService;
 
     @Override
@@ -49,13 +52,15 @@ public class CandidateService implements ICandidateService {
 
     @Override
     public Candidate update_candidate(UpdateCandidateDTO updateCandidateDTO) {
-        Optional<User> email_in_use = iUserService.get_user_by_email(updateCandidateDTO.getEmail());
+        // ! Busqueda de email en uso
+        Optional<User> email_in_use = iUserRepository.get_user_by_email(updateCandidateDTO.getEmail());
+        System.out.println("email_in_use: " + email_in_use.isPresent());
         Long id_user_decrypt = iCryptoService.decrypt(updateCandidateDTO.getId_candidate_crypt());
 
         if (email_in_use.isPresent() && email_in_use.get().getId_user() != id_user_decrypt) {
             throw new UpdateException("El email que se pretende guardar ya se encuentra en uso por otro usuario");
         }
-
+        System.out.println("No hay usuario usando ese mail");
         // ! Busqueda de perfil candidato y actualizacion
         User user_to_update = iUserService.get_user(id_user_decrypt);
         Candidate candidate_user = user_to_update.getCandidate();

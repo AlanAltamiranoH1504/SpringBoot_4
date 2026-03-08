@@ -16,6 +16,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_user;
     private String email;
+    @JsonIgnore
     private String password;
     private boolean status;
     @ManyToMany(fetch = FetchType.EAGER)

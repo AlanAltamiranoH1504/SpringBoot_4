@@ -22,9 +22,10 @@ public class ImgController {
 
     @PostMapping("/prueba")
     public ResponseEntity<?> prueba(@RequestParam("file") MultipartFile file) throws IOException {
-        String url = iCloudinaryService.upload(file);
+        Map response_cloudinaru = iCloudinaryService.upload(file);
         Map<String, Object> response = new HashMap<>();
-        response.put("url", url);
+        response.put("url", response_cloudinaru.get("url"));
+        response.put("public_id", response_cloudinaru.get("public_id"));
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

@@ -21,7 +21,7 @@ public class CloudinaryService implements ICloudinaryService {
     private Cloudinary cloudinary;
 
     @Override
-    public String upload(MultipartFile file) throws IOException {
+    public Map upload(MultipartFile file) throws IOException {
         // ! Validacion de existencia de archivo
         if (file.isEmpty()) {
             throw new NotFoundFile("Ocurrio un error en la subida del archivo");
@@ -34,7 +34,16 @@ public class CloudinaryService implements ICloudinaryService {
         file.transferTo(uploadFile);
 
         Map result = cloudinary.uploader().upload(uploadFile, ObjectUtils.emptyMap());
-        return (String) result.get("url");
+        return result;
+    }
+
+    @Override
+    public boolean delete_image(String public_id_img) throws IOException {
+        Map result_delete = cloudinary.uploader().destroy(public_id_img, ObjectUtils.emptyMap());
+        if (!result_delete.get("result").equals("ok")) {
+            throw new IOException("Ocurrio un error en la eliminacion de la imgagen");
+        }
+        return true;
     }
 
     @Override

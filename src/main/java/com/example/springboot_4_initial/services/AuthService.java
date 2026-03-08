@@ -85,6 +85,7 @@ public class AuthService implements IAuthService {
                 createCandidateDTO.getName_candidate(),
                 createCandidateDTO.getLastname_candidate(),
                 null,
+                null,
                 createCandidateDTO.getCellphone(),
                 createCandidateDTO.getAddress(),
                 uuid,

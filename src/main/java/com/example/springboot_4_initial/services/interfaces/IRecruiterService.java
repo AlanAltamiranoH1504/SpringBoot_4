@@ -15,5 +15,4 @@ public interface IRecruiterService {
     public abstract void destroy_recruiter(Long id_recruiter);
     public abstract boolean username_in_use(String username, Long id_recruiter, boolean is_update);
     public abstract boolean confirm_account(String token_confirm_account, String randome_number);
-
 }

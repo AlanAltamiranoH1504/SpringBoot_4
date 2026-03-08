@@ -41,24 +41,18 @@ public class RecruiterController {
     @DeleteMapping("/delete_recruiter/{id_recruiter}")
     public ResponseEntity<?> delete_recruiter(@PathVariable Long id_recruiter) {
         iRecruiterService.delete_recruiter(id_recruiter);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(iResponseService.generate_response(
-                        true,
-                        "Reclutador eliminado correctamente")
-                );
+        return ResponseEntity.status(HttpStatus.OK).body(iResponseService.generate_response(true,"Reclutador eliminado correctamente"));
     }
 
     @DeleteMapping("/destroy_recruiter/{id_recruiter}")
     public ResponseEntity<?> destroy_recruiter(@PathVariable Long id_recruiter) {
         iRecruiterService.destroy_recruiter(id_recruiter);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(iResponseService.generate_response(true, "Reclutador eliminado correctamente"));
+        return ResponseEntity.status(HttpStatus.OK).body(iResponseService.generate_response(true, "Reclutador eliminado correctamente"));
     }
 
     @PutMapping("/update_recruiter/{id_user}")
     public ResponseEntity<?> update_recruiter(@Valid @RequestBody UpdateRecruiterDTO updateRecruiterDTO, @PathVariable Long id_user) {
         iRecruiterService.update_recruiter(updateRecruiterDTO, id_user);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(iResponseService.generate_response(true, "Datos de reclutador actualizados correctamente"));
+        return ResponseEntity.status(HttpStatus.OK).body(iResponseService.generate_response(true, "Datos de reclutador actualizados correctamente"));
     }
 }

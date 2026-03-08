@@ -16,6 +16,7 @@ public class Candidate {
     private String name_candidate;
     private String lastname_candidate;
     private String img_profile;
+    private String public_id_img;
     private String cellphone;
     private String address;
     private String token_confirm_account;
@@ -29,10 +30,11 @@ public class Candidate {
     public Candidate() {
     }
 
-    public Candidate(String name_candidate, String lastname_candidate, String img_profile, String cellphone, String address, String token_confirm_account, String token_reset_password, String randome_number, boolean status, User user) {
+    public Candidate(String name_candidate, String lastname_candidate, String img_profile, String public_id_img, String cellphone, String address, String token_confirm_account, String token_reset_password, String randome_number, boolean status, User user) {
         this.name_candidate = name_candidate;
         this.lastname_candidate = lastname_candidate;
         this.img_profile = img_profile;
+        this.public_id_img = public_id_img;
         this.cellphone = cellphone;
         this.address = address;
         this.token_confirm_account = token_confirm_account;
@@ -42,11 +44,12 @@ public class Candidate {
         this.user = user;
     }
 
-    public Candidate(Long id_candidate, String name_candidate, String lastname_candidate, String img_profile, String cellphone, String address, String token_confirm_account, String token_reset_password, String randome_number, boolean status, User user) {
+    public Candidate(Long id_candidate, String name_candidate, String lastname_candidate, String img_profile, String public_id_img, String cellphone, String address, String token_confirm_account, String token_reset_password, String randome_number, boolean status, User user) {
         this.id_candidate = id_candidate;
         this.name_candidate = name_candidate;
         this.lastname_candidate = lastname_candidate;
         this.img_profile = img_profile;
+        this.public_id_img = public_id_img;
         this.cellphone = cellphone;
         this.address = address;
         this.token_confirm_account = token_confirm_account;
@@ -142,5 +145,13 @@ public class Candidate {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getPublic_id_img() {
+        return public_id_img;
+    }
+
+    public void setPublic_id_img(String public_id_img) {
+        this.public_id_img = public_id_img;
     }
 }

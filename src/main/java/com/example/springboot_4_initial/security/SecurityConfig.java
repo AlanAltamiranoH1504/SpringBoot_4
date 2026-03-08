@@ -55,62 +55,68 @@ public class SecurityConfig {
                 })
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(request -> request
-                        // ! RUTAS PUBLICAS
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/vacancy/list").permitAll()
-                        .requestMatchers("/vacancy/find/**").permitAll()
-                        .requestMatchers("/vacancy/category/**").permitAll()
-                        .requestMatchers("/vacancy/name/**").permitAll()
-                        .requestMatchers("/category/list").permitAll()
-                        .requestMatchers("/profiles/list").permitAll()
+                                // ! RUTAS PUBLICAS
+                                .requestMatchers(
+                                        "/auth/**",
+                                        "/vacancy/list",
+                                        "/vacancy/find/**",
+                                        "/vacancy/category/**",
+                                        "/vacancy/name/**",
+                                        "/category/list",
+                                        "/profiles/list"
+                                ).permitAll()
 
-                        // ! RUTAS PARA RECLUTADORES
-                        .requestMatchers("/vacancy/save").hasAnyRole("RECLURADOR", "ADMINISTRADOR")
-                        .requestMatchers("/vacancy/update/**").hasAnyRole("RECLURADOR", "ADMINISTRADOR")
-                        .requestMatchers("/vacancy/delete/**").hasAnyRole("RECLURADOR", "ADMINISTRADOR")
-                        .requestMatchers("/vacancy/save_img_vacancy/**").hasAnyRole("RECLURADOR", "ADMINISTRADOR")
-                        .requestMatchers("/candidate/find_candidate/**").hasAnyRole("RECLURADOR", "ADMINISTRADOR")
-                        .requestMatchers("/recruiter/update_recruiter/**").hasAnyRole("RECLUTADOR", "ADMINISTRADOR")
-                        .requestMatchers("/recruiter/show_recruiter").hasAnyRole("RECLUTADOR", "ADMINISTRADOR")
+                                // ! RUTAS PARA RECLUTADORES
+                                .requestMatchers(
+                                        "/vacancy/save",
+                                        "/vacancy/update/**",
+                                        "/vacancy/delete/**",
+                                        "/vacancy/save_img_vacancy/**",
+                                        "/candidate/find_candidate/**",
+                                        "/recruiter/update_recruiter/**",
+                                        "/recruiter/show_recruiter",
+                                        "/candidate/find_candidate/**"
+                                ).hasAnyRole("RECLURADOR", "ADMINISTRADOR")
 
-                        // ! RUTAS PARA CANDIDATOS AUTENTICADOS
-                        .requestMatchers("/users/update_user/**", "/users/update/img_profile/**").hasAnyRole("RECLUTADOR", "CANDIDATO")
-                        .requestMatchers("/users/perfil").authenticated()
-                        .requestMatchers("/imgs/prueba").authenticated()
-                        .requestMatchers("/users/user_in_session").authenticated()
-                        .requestMatchers("/candidate/update_candidate").hasAnyRole("CANDIDATO")
+                                // ! RUTAS PARA CANDIDATOS AUTENTICADOS
+                                .requestMatchers("/users/update_user/**", "/users/update/img_profile/**").hasAnyRole("RECLUTADOR", "CANDIDATO")
+                                .requestMatchers("/users/user_in_session").authenticated()
+                                .requestMatchers("/candidate/destroy_candidate/**").hasAnyRole("CANDIDATO", "ADMINISTRADOR")
+                                .requestMatchers(
+                                        "/candidate/update_candidate",
+                                        "/candidate/show_candidate",
+                                        "/candidate/update_img_profile/**"
+                                ).hasAnyRole("CANDIDATO", "RECLUTADOR")
 
-                        // ! RUTAS PARA SUPER ADMIN
-                        .requestMatchers(
-                                "/admin/**",
+                                // ! RUTAS PARA SUPER ADMIN
+                                .requestMatchers(
+                                        "/admin/**",
+//                                "/users/list",
+//                                "/users/find/**",
+                                        "/users/add_profile/**",
+                                        "/users/remove_profiles/**",
 
-                                "/users/list",
-                                "/users/find/**",
-                                "/users/add_profile/**",
-                                "/users/remove_profiles/**",
+                                        "/candidate/list",
+                                        "/candidate/delete_candidate/**",
 
-                                "/candidate/list",
-                                "/candidate/destroy_candidate/**",
-                                "/candidate/delete_candidate/**",
+                                        "/category/save_categories",
+                                        "/category/save",
+                                        "/category/search/**",
+                                        "/category/update/**",
+                                        "/category/delete/**",
+                                        "/category/delete_all",
+                                        "/category/save_categories",
 
-                                "/category/save_categories",
-                                "/category/save",
-                                "/category/search/**",
-                                "/category/update/**",
-                                "/category/delete/**",
-                                "/category/delete_all",
-                                "/category/save_categories",
+                                        "/profiles/save",
+                                        "/profiles/find/**",
+                                        "/profiles/delete/**",
 
-                                "/profiles/save",
-                                "/profiles/find/**",
-                                "/profiles/delete/**",
+                                        "/recruiter/list",
+                                        "/recruiter/find_recruiter/**",
+                                        "/recruiter/delete_recruiter/**",
+                                        "/recruiter/destroy_recruiter/**"
 
-                                "/recruiter/list",
-                                "/recruiter/find_recruiter/**",
-                                "/recruiter/delete_recruiter/**",
-                                "/recruiter/destroy_recruiter/**"
-
-                        ).hasRole("ADMINISTRADOR")
+                                ).hasRole("ADMINISTRADOR")
                 )
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

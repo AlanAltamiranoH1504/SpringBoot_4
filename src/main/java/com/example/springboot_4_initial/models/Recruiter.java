@@ -3,6 +3,8 @@ package com.example.springboot_4_initial.models;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity()
 @Table(name = "tbl_tbl_recruiter")
 @JsonPropertyOrder({"id_recruiter", "name", "surnames", "username", "img_profile", "token_confirm_account", "token_reset_password", "randome_number", "status", "user"})
@@ -21,6 +23,10 @@ public class Recruiter {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_user")
     private User user;
+
+    // ! Un reclutador puede tener muchas vacantes
+    @OneToMany(mappedBy = "recruiter")
+    private List<Vacancy> vacancies;
 
     public Recruiter() {
     }
@@ -130,5 +136,13 @@ public class Recruiter {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<Vacancy> getVacancies() {
+        return vacancies;
+    }
+
+    public void setVacancies(List<Vacancy> vacancies) {
+        this.vacancies = vacancies;
     }
 }

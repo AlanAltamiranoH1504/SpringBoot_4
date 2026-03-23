@@ -87,7 +87,9 @@ public class SecurityConfig {
                                         "/industrial_sector/list",
                                         "/industrial_sector/find/**",
                                         "/contract_type/list",
-                                        "/contract_type/find/**"
+                                        "/contract_type/find/**",
+                                        "/progress_status/list",
+                                        "/progress_status/find/**"
 
                                 ).hasAnyRole("RECLUTADOR", "ADMINISTRADOR")
 
@@ -138,7 +140,12 @@ public class SecurityConfig {
                                         "/contract_type/save",
                                         "/contract_type/delete/**",
                                         "/contract_type/destroy/**",
-                                        "/contract_type/update/**"
+                                        "/contract_type/update/**",
+
+                                        "/progress_status/save",
+                                        "/progress_status/update/**",
+                                        "/progress_status/delete/**",
+                                        "/progress_status/destroy/**"
                                 ).hasRole("ADMINISTRADOR")
                 )
                 .sessionManagement(sessionManagement -> sessionManagement

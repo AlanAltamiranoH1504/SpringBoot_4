@@ -1,11 +1,14 @@
 package com.example.springboot_4_initial.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity()
 @Table(name = "tbl_progress_status")
+@JsonPropertyOrder({"id_progress_status", "name_progress_status", "description_progress_status", "status"})
 public class ProgressStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,6 +16,7 @@ public class ProgressStatus {
     private String name_progress_status;
     private String description_progress_status;
     private boolean status;
+    @JsonIgnore
     @OneToMany(mappedBy = "progressStatus")
     private List<Vacancy> vacancies;
 

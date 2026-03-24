@@ -16,12 +16,16 @@ import com.example.springboot_4_initial.repositories.ICandidateRepository;
 import com.example.springboot_4_initial.repositories.IUserRepository;
 import com.example.springboot_4_initial.repositories.IVacancyRepository;
 import com.example.springboot_4_initial.services.interfaces.IApplicationService;
+import com.example.springboot_4_initial.services.interfaces.ICloudinaryService;
 import com.example.springboot_4_initial.services.interfaces.ICryptoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -36,6 +40,8 @@ public class ApplicationService implements IApplicationService {
     private ICryptoService iCryptoService;
     @Autowired
     private IUserRepository iUserRepository;
+    @Autowired
+    private ICloudinaryService iCloudinaryService;
 
     @Override
     public List<Application> findAllByRecruiter(Long idRecruiter) {
@@ -67,17 +73,20 @@ public class ApplicationService implements IApplicationService {
     }
 
     @Override
-    public Application saveApplication(CreateApplicationDTO createApplicationDTO) {
+    public Application saveApplication(CreateApplicationDTO createApplicationDTO, MultipartFile file) throws IOException {
         this.existsVacancy(createApplicationDTO.getIdVacancy());
 
         Optional<Application> isExistsApplication = iApplicationRepository.isExistsApplication(createApplicationDTO.getIdCandidate(), createApplicationDTO.getIdVacancy());
         if (isExistsApplication.isPresent()) {
             throw new ApplicationExistsException("El usuario ya se encontraba postulado a la vacante. Puede revisar el estado de la misma");
         }
+        Map responseCloudinary = iCloudinaryService.uploadFile(file);
+
+
         Application applicationToSave = new Application(
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                "",
+                String.valueOf(responseCloudinary.get("url")),
                 createApplicationDTO.getComments_candidate(),
                 null,
                 ApplicationStatus.RECEIVED,

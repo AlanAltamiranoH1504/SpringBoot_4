@@ -11,14 +11,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.hibernate.validator.constraints.Length;
 
-import java.time.LocalDateTime;
 
 public class CreateApplicationDTO {
-//    private LocalDateTime application_date;
-//    private LocalDateTime last_update;
-//    private String url_cv;
-//    private String notes_recruiter;
-//    private ApplicationStatus status = ApplicationStatus.RECEIVED;
     @Length(max = 5000, message = "Los comentarios no pueden ser mayor a 5000 caracteres")
     private String comments_candidate;
 

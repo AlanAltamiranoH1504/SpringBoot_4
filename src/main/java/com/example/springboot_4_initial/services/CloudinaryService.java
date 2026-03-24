@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class CloudinaryService implements ICloudinaryService {
@@ -34,6 +35,27 @@ public class CloudinaryService implements ICloudinaryService {
         file.transferTo(uploadFile);
 
         Map result = cloudinary.uploader().upload(uploadFile, ObjectUtils.emptyMap());
+        return result;
+    }
+
+    @Override
+    public Map uploadFile(MultipartFile file) throws IOException {
+        // ! Validacion de existencia de archivo
+        if (file.isEmpty()) {
+            throw new NotFoundFile("Ocurrio un error en la subida del archivo");
+        }
+        // ! Validacion de mimes
+        boolean resultMimesValidation = this.validateMimes(file, new String[]{"application/pdf"});
+//        File uploadFile = File.createTempFile("temp", file.getOriginalFilename());
+//        file.transferTo(uploadFile);
+
+        Map result = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
+                "resource_type", "auto",
+                "folder", "cvs",
+                "public_id", "cv_" + UUID.randomUUID(),
+                "type", "upload",
+                "access_mode", "public"
+        ));
         return result;
     }
 

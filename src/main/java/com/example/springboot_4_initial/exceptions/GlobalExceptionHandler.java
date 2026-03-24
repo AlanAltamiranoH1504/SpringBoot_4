@@ -1,5 +1,6 @@
 package com.example.springboot_4_initial.exceptions;
 
+import com.example.springboot_4_initial.exceptions.application.ApplicationExistsException;
 import com.example.springboot_4_initial.exceptions.auth.NotCofirmAccountException;
 import com.example.springboot_4_initial.exceptions.auth.PasswordIncorrectException;
 import com.example.springboot_4_initial.exceptions.categories.CreatedCategory;
@@ -315,5 +316,16 @@ public class GlobalExceptionHandler {
                         "",
                         ex.getMessage()
                 ));
+    }
+
+    @ExceptionHandler(ApplicationExistsException.class)
+    public ResponseEntity<?> handleApplicationExistsException(ApplicationExistsException ex) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                iExcepcionService.generateMessageException(
+                        "Ocurrio una situación con la aplicación a la vacante",
+                        "",
+                        ex.getMessage()
+                )
+        );
     }
 }

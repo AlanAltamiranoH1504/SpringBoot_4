@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 @Table(name = "tbl_candidates")
 @JsonPropertyOrder({
         "id_candidate", "name_candidate", "lastname_candidate",
-        "img_profile", "cellphone", "address", "token_confirm_account",
+        "img_profile", "public_id_img", "cellphone", "address", "token_confirm_account",
         "token_reset_password", "randome_number", "status", "user"})
 public class Candidate {
     @Id

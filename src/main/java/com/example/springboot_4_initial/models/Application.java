@@ -1,5 +1,7 @@
 package com.example.springboot_4_initial.models;
 
+import com.example.springboot_4_initial.models.enums.ApplicationStatus;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -7,6 +9,8 @@ import java.time.LocalDateTime;
 
 @Entity()
 @Table(name = "tbl_applications")
+@JsonPropertyOrder({"id_application", "application_date", "last_update", "url_cv", "comments_candidate", "notes_recruiter",
+"status", "vacancy", "candidate"})
 public class Application {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,23 +20,26 @@ public class Application {
     private String url_cv;
     private String comments_candidate;
     private String notes_recruiter;
+    @Enumerated(EnumType.STRING)
+    private ApplicationStatus status = ApplicationStatus.RECEIVED;
     @ManyToOne()
     @JoinColumn(name = "id_vacancy")
     private Vacancy vacancy;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_candidate")
     private Candidate candidate;
 
     public Application() {
     }
 
-    public Application(LocalDateTime application_date, LocalDateTime last_update, String url_cv, String comments_candidate, String notes_recruiter, Vacancy vacancy, Candidate candidate) {
+    public Application(LocalDateTime application_date, LocalDateTime last_update, String url_cv, String comments_candidate, String notes_recruiter, ApplicationStatus status, Vacancy vacancy, Candidate candidate) {
         this.application_date = application_date;
         this.last_update = last_update;
         this.url_cv = url_cv;
         this.comments_candidate = comments_candidate;
         this.notes_recruiter = notes_recruiter;
+        this.status = status;
         this.vacancy = vacancy;
         this.candidate = candidate;
     }
@@ -99,5 +106,13 @@ public class Application {
 
     public void setCandidate(Candidate candidate) {
         this.candidate = candidate;
+    }
+
+    public ApplicationStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ApplicationStatus status) {
+        this.status = status;
     }
 }
